@@ -273,6 +273,9 @@ function DisputeDetailPage({
 
 export default function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const [disputes, setDisputes] = useState<Dispute[]>(() => loadDisputes());
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletMode, setWalletMode] = useState<WalletMode>(null);
@@ -287,6 +290,14 @@ export default function App() {
 
     window.localStorage.setItem(DISPUTES_STORAGE_KEY, JSON.stringify(disputes));
   }, [disputes]);
+
+  // Auto-redirect to dashboard when wallet is connected from the home page
+  useEffect(() => {
+    if (walletAddress && currentPath === '/') {
+      navigate('/dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [walletAddress, currentPath, navigate]);
 
   const startPendingAction = (key: string) => {
     setPendingActionKeys((currentKeys) => (
@@ -633,8 +644,6 @@ export default function App() {
     }
   };
 
-  const location = useLocation();
-  const currentPath = location.pathname;
   let currentPage: string = 'home';
   if (currentPath.startsWith('/dashboard')) currentPage = 'dashboard';
   else if (currentPath.startsWith('/submit')) currentPage = 'submit';
