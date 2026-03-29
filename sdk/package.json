@@ -1,0 +1,37 @@
+{
+  "name": "@verdictai/sdk",
+  "version": "1.0.0",
+  "description": "Official TypeScript SDK for VerdictAI - Decentralized AI Dispute Resolution on GenLayer",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "verdictai",
+    "genlayer",
+    "dispute-resolution",
+    "ai",
+    "arbitration",
+    "blockchain",
+    "web3",
+    "sdk"
+  ],
+  "author": "VerdictAI Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "genlayer-js": ">=0.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panzauto46-bot/VerdictAI"
+  },
+  "homepage": "https://github.com/panzauto46-bot/VerdictAI#readme"
+}

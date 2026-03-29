@@ -173,6 +173,15 @@ VerdictAI/
 │                               #    - Dispute lifecycle management
 │                               #    - Equivalence Principle consensus
 │
+├── sdk/
+│   ├── index.ts               # 📦 Official TypeScript SDK
+│   ├── package.json           #    - @verdictai/sdk npm package
+│   └── tsconfig.json          #    - Ready for npm publish
+│
+├── docs/
+│   ├── B2B_API.md             # 🔗 B2B Integration Guide
+│   └── images/                # 🖼️ Documentation assets
+│
 ├── src/
 │   ├── App.tsx                 # Main application component
 │   ├── main.tsx                # Entry point
@@ -208,9 +217,6 @@ VerdictAI/
 │   │
 │   └── data/
 │       └── mockDisputes.ts     # Demo dispute data
-│
-├── docs/
-│   └── images/                 # Documentation assets
 │
 ├── .env.example                # Environment template
 ├── .env.local                  # Local configuration (gitignored)
@@ -383,7 +389,7 @@ Step 7: withdraw_funds(dispute_id)  ← Claim funds
 | Phase 5 - Evidence/Verdict | ✅ Complete | IPFS + AI verdict engine |
 | Phase 6 - Enforcement | ✅ Complete | Appeal + withdraw funds |
 | Phase 7 - Demo Ready | ✅ Complete | Smart contract deployed & tested |
-| Phase 8 - Production | 🔮 Future | Mainnet deployment, SDK, B2B API |
+| Phase 8 - Production | ✅ Complete | SDK, B2B API, mainnet-ready config |
 
 ---
 
@@ -406,6 +412,40 @@ Step 7: withdraw_funds(dispute_id)  ← Claim funds
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## 📦 SDK
+
+The official `@verdictai/sdk` package provides a clean API for any dApp to integrate dispute resolution:
+
+```typescript
+import { createVerdictAI } from '@verdictai/sdk';
+
+const vai = createVerdictAI({
+  contractAddress: '0x2b468A6b65e028c149cbFA0106815039dBED481f',
+  chain: 'testnetBradbury',
+});
+
+// Submit a dispute
+await vai.submitDispute(walletAddress, {
+  category: 'freelance',
+  title: 'Payment Dispute',
+  description: 'Work completed but payment withheld',
+  claimantName: 'Alice',
+  claim: 'I delivered all milestones',
+  evidenceHash: 'QmIPFS...',
+  respondentAddress: '0xBob...',
+  respondentName: 'Bob',
+  stakeAmount: 1000000n,
+});
+
+// Check verdict
+const verdict = await vai.getVerdict('DSP-1');
+console.log(verdict?.winner); // 'A', 'B', or 'split'
+```
+
+📖 Full API reference: [docs/B2B_API.md](docs/B2B_API.md)
 
 ---
 
