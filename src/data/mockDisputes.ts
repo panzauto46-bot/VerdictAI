@@ -1,0 +1,150 @@
+import { Dispute } from '../types/dispute';
+
+export const mockDisputes: Dispute[] = [
+  {
+    id: 'DSP-001',
+    category: 'freelance',
+    title: 'Website Development - Milestone Payment Dispute',
+    description: 'Client claims deliverables were not completed according to specification. Developer claims all requirements were met and requests full payment release.',
+    partyA: {
+      address: '0x1a2b...3c4d',
+      name: 'DevStudio Labs',
+      claim: 'All 5 milestones completed as per SOW. Client approved designs in Phase 2. Requested changes in Phase 4 were out of scope but completed anyway. Full payment of 15 ETH should be released.',
+      evidenceHash: 'QmX7b...kL9',
+      stake: 0.5,
+    },
+    partyB: {
+      address: '0x5e6f...7g8h',
+      name: 'TechCorp Inc',
+      claim: 'Mobile responsiveness broken on Phase 3 deliverables. Performance benchmarks not met (3.2s load time vs 2s requirement). Requesting 40% reduction in payment.',
+      evidenceHash: 'QmY8c...mN2',
+      stake: 0.5,
+    },
+    status: 'verdict',
+    value: 15,
+    createdAt: '2026-03-28T10:30:00Z',
+    deadline: '2026-03-30T10:30:00Z',
+    verdict: {
+      winner: 'split',
+      confidence: 87,
+      reasoning: 'Analysis of submitted evidence shows: (1) 4 of 5 milestones were fully completed per specification. (2) Phase 3 mobile responsiveness issues are documented in screenshot evidence. (3) Performance benchmark shortfall is marginal (1.2s delta). (4) Out-of-scope work was performed without written change order. RULING: 85% payment to Party A for substantially completed work, 15% returned to Party B for remediation costs.',
+      awardPercentage: 85,
+      validators: 5,
+      consensusReached: true,
+      timestamp: '2026-03-30T14:22:00Z',
+    },
+  },
+  {
+    id: 'DSP-002',
+    category: 'dao',
+    title: 'Governance Bounty - Smart Contract Audit',
+    description: 'Contributor completed security audit but DAO treasury multisig has not released bounty payment.',
+    partyA: {
+      address: '0x9a0b...1c2d',
+      name: 'SecureChain Auditor',
+      claim: 'Completed full audit of 3 contracts (4,200 lines). Submitted detailed report with 2 critical, 5 high, 12 medium findings. Bounty was 25 ETH. DAO has acknowledged report but refuses payment.',
+      evidenceHash: 'QmZ9d...pQ4',
+      stake: 0.75,
+    },
+    partyB: {
+      address: '0x3e4f...5g6h',
+      name: 'AlphaDAO Treasury',
+      claim: 'Audit was incomplete. Critical vulnerability in Contract C was not found (discovered by another auditor post-submission). Bounty terms required comprehensive coverage.',
+      evidenceHash: 'QmA1e...rR5',
+      stake: 0.75,
+    },
+    status: 'reviewing',
+    value: 25,
+    createdAt: '2026-04-01T08:15:00Z',
+    deadline: '2026-04-03T08:15:00Z',
+  },
+  {
+    id: 'DSP-003',
+    category: 'nft',
+    title: 'Rare NFT Authenticity Dispute',
+    description: 'Buyer claims purchased NFT is not from the original collection despite seller verification.',
+    partyA: {
+      address: '0x7i8j...9k0l',
+      name: 'NFT_Collector_2024',
+      claim: 'Purchased "CryptoPunk #7842" for 45 ETH. On-chain provenance shows mint from unauthorized contract. Seller misrepresented authenticity. Requesting full refund.',
+      evidenceHash: 'QmB2f...sS6',
+      stake: 1.0,
+    },
+    partyB: {
+      address: '0x1m2n...3o4p',
+      name: 'RareFinds_Seller',
+      claim: 'NFT is legitimate derivative work, clearly stated in listing as "CryptoPunk Style #7842". Buyer did not read full description. No refund warranted.',
+      evidenceHash: 'QmC3g...tT7',
+      stake: 1.0,
+    },
+    status: 'responding',
+    value: 45,
+    createdAt: '2026-04-02T16:45:00Z',
+    deadline: '2026-04-04T16:45:00Z',
+  },
+  {
+    id: 'DSP-004',
+    category: 'defi',
+    title: 'Liquidation Oracle Dispute',
+    description: 'User claims improper liquidation due to oracle price manipulation during flash loan attack.',
+    partyA: {
+      address: '0x5q6r...7s8t',
+      name: 'DeFi_Whale',
+      claim: 'My 500 ETH collateral was liquidated at $1,200/ETH while market price was $1,850. Oracle was manipulated by flash loan. Requesting compensation of 150 ETH (loss difference).',
+      evidenceHash: 'QmD4h...uU8',
+      stake: 2.0,
+    },
+    partyB: {
+      address: '0x9u0v...1w2x',
+      name: 'LendFi Protocol',
+      claim: 'Liquidation followed protocol parameters. Oracle reported accurate TWAP. User was over-leveraged (95% LTV). No manipulation detected in our logs.',
+      evidenceHash: 'QmE5i...vV9',
+      stake: 2.0,
+    },
+    status: 'open',
+    value: 150,
+    createdAt: '2026-04-03T09:00:00Z',
+    deadline: '2026-04-05T09:00:00Z',
+  },
+  {
+    id: 'DSP-005',
+    category: 'freelance',
+    title: 'Logo Design - Plagiarism Claim',
+    description: 'Client claims delivered logo was plagiarized from existing brand.',
+    partyA: {
+      address: '0x3y4z...5a6b',
+      name: 'PixelPerfect Design',
+      claim: 'Logo was 100% original work created in Figma. Any similarity to other brands is coincidental and within industry standard for minimalist logos.',
+      evidenceHash: 'QmF6j...wW0',
+      stake: 0.3,
+    },
+    partyB: {
+      address: '0x7c8d...9e0f',
+      name: 'StartupXYZ',
+      claim: 'Logo is 90% identical to Nike subsidiary brand. Cannot use without trademark infringement. Requesting refund of 2 ETH design fee.',
+      evidenceHash: 'QmG7k...xX1',
+      stake: 0.3,
+    },
+    status: 'enforced',
+    value: 2,
+    createdAt: '2026-03-20T11:30:00Z',
+    deadline: '2026-03-22T11:30:00Z',
+    verdict: {
+      winner: 'B',
+      confidence: 94,
+      reasoning: 'Image comparison analysis shows 87% structural similarity between submitted logo and Nike Brand Co. trademark (registered 2019). Designer workflow files show reference images from the trademarked logo. RULING: Design constitutes derivative work without license. Full refund awarded to Party B.',
+      awardPercentage: 100,
+      validators: 5,
+      consensusReached: true,
+      timestamp: '2026-03-22T15:45:00Z',
+    },
+  },
+];
+
+export const getDisputeById = (id: string): Dispute | undefined => {
+  return mockDisputes.find(d => d.id === id);
+};
+
+export const getDisputesByStatus = (status: Dispute['status']): Dispute[] => {
+  return mockDisputes.filter(d => d.status === status);
+};

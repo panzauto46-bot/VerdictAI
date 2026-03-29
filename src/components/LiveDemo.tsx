@@ -1,0 +1,201 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Brain, CheckCircle2, Users, Shield, Zap } from 'lucide-react';
+
+export default function LiveDemo() {
+  const [step, setStep] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const steps = [
+    { label: 'Dispute Submitted', icon: Users, color: 'text-blue-400' },
+    { label: 'LLM-A Analyzing...', icon: Brain, color: 'text-purple-400' },
+    { label: 'LLM-B Analyzing...', icon: Brain, color: 'text-pink-400' },
+    { label: 'LLM-C Analyzing...', icon: Brain, color: 'text-indigo-400' },
+    { label: 'Consensus Reached', icon: Shield, color: 'text-emerald-400' },
+    { label: 'Verdict Finalized', icon: CheckCircle2, color: 'text-green-400' },
+  ];
+
+  const startDemo = () => {
+    setIsRunning(true);
+    setStep(0);
+  };
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    if (step < steps.length - 1) {
+      const timer = setTimeout(() => {
+        setStep((currentStep) => currentStep + 1);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
+    setIsRunning(false);
+  }, [step, isRunning, steps.length]);
+
+  return (
+    <section className="py-24 bg-slate-900">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
+          <p className="text-lg text-slate-400">
+            Watch how multiple AI validators independently analyze and reach consensus
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-8"
+        >
+          {/* Demo Visualization */}
+          <div className="relative h-64 mb-8">
+            {/* Center Node */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/25 z-10">
+              <Zap className="w-10 h-10 text-white" />
+            </div>
+
+            {/* Validator Nodes */}
+            {[0, 1, 2, 3, 4].map((i) => {
+              const angle = (i * 72 - 90) * (Math.PI / 180);
+              const radius = 100;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+              const isActive = isRunning && step >= 1 && step <= 4;
+              const isComplete = step > 4;
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0.8, opacity: 0.5 }}
+                  animate={{
+                    scale: isActive || isComplete ? 1 : 0.8,
+                    opacity: isActive || isComplete ? 1 : 0.5,
+                  }}
+                  className="absolute top-1/2 left-1/2"
+                  style={{
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                  }}
+                >
+                  <div
+                    className={`w-14 h-14 rounded-lg flex items-center justify-center transition-colors ${
+                      isComplete
+                        ? 'bg-emerald-500/20 border-2 border-emerald-500'
+                        : isActive
+                          ? 'bg-purple-500/20 border-2 border-purple-500'
+                          : 'bg-slate-700/50 border-2 border-slate-600'
+                    }`}
+                  >
+                    <Brain
+                      className={`w-6 h-6 ${
+                        isComplete
+                          ? 'text-emerald-400'
+                          : isActive
+                            ? 'text-purple-400 animate-pulse'
+                            : 'text-slate-500'
+                      }`}
+                    />
+                  </div>
+                  <div className="text-center mt-2">
+                    <span
+                      className={`text-xs ${isComplete ? 'text-emerald-400' : isActive ? 'text-purple-400' : 'text-slate-500'}`}
+                    >
+                      LLM-{String.fromCharCode(65 + i)}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+
+            {/* Connection Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {[0, 1, 2, 3, 4].map((i) => {
+                const angle = (i * 72 - 90) * (Math.PI / 180);
+                const radius = 100;
+                const x = Math.cos(angle) * radius + 200;
+                const y = Math.sin(angle) * radius + 128;
+                const isActive = isRunning && step >= 1;
+
+                return (
+                  <line
+                    key={i}
+                    x1="200"
+                    y1="128"
+                    x2={x}
+                    y2={y}
+                    stroke={isActive ? '#8b5cf6' : '#475569'}
+                    strokeWidth="2"
+                    strokeDasharray={isActive ? '0' : '5,5'}
+                    className="transition-all duration-500"
+                  />
+                );
+              })}
+            </svg>
+          </div>
+
+          {/* Progress Steps */}
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <AnimatePresence mode="wait">
+              {steps.slice(0, step + 1).map((currentStep, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
+                    i === step ? 'bg-violet-500/20 border border-violet-500/50' : 'bg-slate-700/50'
+                  }`}
+                >
+                  <currentStep.icon className={`w-4 h-4 ${currentStep.color}`} />
+                  <span className="text-white">{currentStep.label}</span>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Result */}
+          <AnimatePresence>
+            {step === 5 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center"
+              >
+                <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                <div className="text-emerald-300 font-semibold">Consensus: Party A wins (87% confidence)</div>
+                <div className="text-emerald-400/70 text-sm">5/5 validators agreed | Auto-enforcement triggered</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Start Button */}
+          {!isRunning && step === 0 && (
+            <button
+              onClick={startDemo}
+              className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium rounded-lg transition-all"
+            >
+              Run Demo
+            </button>
+          )}
+
+          {step > 0 && !isRunning && (
+            <button
+              onClick={() => {
+                setStep(0);
+                startDemo();
+              }}
+              className="w-full mt-4 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-all"
+            >
+              Run Again
+            </button>
+          )}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
