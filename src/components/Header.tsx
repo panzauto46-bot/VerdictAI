@@ -1,4 +1,4 @@
-import { Scale, Menu, X } from 'lucide-react';
+import { Scale, Menu, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { shortenAddress } from '../utils/wallet';
 
@@ -8,6 +8,7 @@ interface HeaderProps {
   walletAddress: string | null;
   walletMode: 'metamask' | 'demo' | null;
   onConnectWallet: () => void | Promise<void>;
+  onDisconnectWallet: () => void;
   isConnectingWallet?: boolean;
 }
 
@@ -17,6 +18,7 @@ export default function Header({
   walletAddress,
   walletMode,
   onConnectWallet,
+  onDisconnectWallet,
   isConnectingWallet = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -69,12 +71,22 @@ export default function Header({
           {/* Connect Wallet Button */}
           <div className="hidden md:flex items-center gap-4">
             {walletAddress ? (
-              <div
-                title={walletMode === 'demo' ? 'Connected via demo wallet mode.' : 'Connected through an injected wallet provider.'}
-                className="px-4 py-2 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg"
-              >
-                {walletMode === 'demo' ? 'Demo ' : ''}
-                {shortenAddress(walletAddress)}
+              <div className="flex items-center gap-2">
+                <div
+                  title={walletMode === 'demo' ? 'Connected via demo wallet mode.' : 'Connected through an injected wallet provider.'}
+                  className="px-4 py-2 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg"
+                >
+                  {walletMode === 'demo' ? 'Demo ' : ''}
+                  {shortenAddress(walletAddress)}
+                </div>
+                <button
+                  type="button"
+                  onClick={onDisconnectWallet}
+                  title="Disconnect Wallet"
+                  className="p-2 bg-slate-800 hover:bg-slate-700 hover:text-red-400 border border-slate-700 text-slate-400 rounded-lg transition-colors"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
               </div>
             ) : (
               <button
@@ -118,9 +130,22 @@ export default function Header({
                 </button>
               ))}
               {walletAddress ? (
-                <div className="mt-2 px-4 py-3 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg">
-                  {walletMode === 'demo' ? 'Demo ' : ''}
-                  {shortenAddress(walletAddress)}
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg">
+                    {walletMode === 'demo' ? 'Demo ' : ''}
+                    {shortenAddress(walletAddress)}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onDisconnectWallet();
+                      setMobileMenuOpen(false);
+                    }}
+                    title="Disconnect Wallet"
+                    className="p-3 bg-slate-800 hover:bg-slate-700 hover:text-red-400 border border-slate-700 text-slate-400 rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                  </button>
                 </div>
               ) : (
                 <button

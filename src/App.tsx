@@ -283,6 +283,13 @@ export default function App() {
   const [pendingActionKeys, setPendingActionKeys] = useState<string[]>([]);
   const [isConnectingWallet, setIsConnectingWallet] = useState(false);
 
+  const handleDisconnectWallet = () => {
+    setWalletAddress(null);
+    setWalletMode(null);
+    navigate('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -657,6 +664,7 @@ export default function App() {
         walletAddress={walletAddress}
         walletMode={walletMode}
         onConnectWallet={handleConnectWallet}
+        onDisconnectWallet={handleDisconnectWallet}
         isConnectingWallet={isConnectingWallet}
       />
 
