@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -633,8 +633,8 @@ export default function App() {
     }
   };
 
-  // Determine current page name for Header
-  const currentPath = window.location.pathname;
+  const location = useLocation();
+  const currentPath = location.pathname;
   let currentPage: string = 'home';
   if (currentPath.startsWith('/dashboard')) currentPage = 'dashboard';
   else if (currentPath.startsWith('/submit')) currentPage = 'submit';
