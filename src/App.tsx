@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -28,7 +29,6 @@ import {
 } from './services/verdictaiAdapter';
 import { resolveVerdict } from './services/verdictSource';
 
-type Page = 'home' | 'dashboard' | 'submit' | 'dispute';
 type WalletMode = 'metamask' | 'demo' | null;
 
 const DISPUTES_STORAGE_KEY = 'verdictai-disputes';
@@ -197,20 +197,88 @@ function getErrorMessage(error: unknown): string {
   return 'Something went wrong while processing the action.';
 }
 
+// ─── Page Components ────────────────────────────────────────────────────────
+
+function HomePage({ onNavigate }: { onNavigate: (page: string) => void }) {
+  return (
+    <>
+      <Hero onNavigate={onNavigate} />
+      <HowItWorks />
+      <LiveDemo />
+      <Features />
+    </>
+  );
+}
+
+function DisputeDetailPage({
+  disputes,
+  onNavigate,
+  onRespond,
+  onRequestVerdict,
+  onClaimFunds,
+  onAppeal,
+  processingDisputeIds,
+  pendingActionKeys,
+  walletAddress,
+}: {
+  disputes: Dispute[];
+  onNavigate: (page: string) => void;
+  onRespond: (disputeId: string, input: DisputeResponseInput) => Promise<void>;
+  onRequestVerdict: (disputeId: string, sourceDispute?: Dispute) => Promise<void>;
+  onClaimFunds: (disputeId: string) => Promise<void>;
+  onAppeal: (disputeId: string) => Promise<void>;
+  processingDisputeIds: string[];
+  pendingActionKeys: string[];
+  walletAddress: string | null;
+}) {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const dispute = disputes.find((d) => d.id === id) ?? null;
+
+  if (!dispute) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Dispute Not Found</h2>
+          <p className="text-slate-400 mb-6">The dispute you&apos;re looking for doesn&apos;t exist.</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <DisputeDetail
+      dispute={dispute}
+      onBack={() => navigate('/dashboard')}
+      onRespond={onRespond}
+      onRequestVerdict={onRequestVerdict}
+      onClaimFunds={onClaimFunds}
+      onAppeal={onAppeal}
+      isProcessingVerdict={processingDisputeIds.includes(dispute.id)}
+      isSubmittingResponse={pendingActionKeys.includes(`${dispute.id}:respond`)}
+      isClaimingFunds={pendingActionKeys.includes(`${dispute.id}:claimFunds`)}
+      isAppealing={pendingActionKeys.includes(`${dispute.id}:appealVerdict`)}
+      walletAddress={walletAddress}
+    />
+  );
+}
+
+// ─── Main App ───────────────────────────────────────────────────────────────
+
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [disputes, setDisputes] = useState<Dispute[]>(() => loadDisputes());
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletMode, setWalletMode] = useState<WalletMode>(null);
   const [processingDisputeIds, setProcessingDisputeIds] = useState<string[]>([]);
   const [pendingActionKeys, setPendingActionKeys] = useState<string[]>([]);
   const [isConnectingWallet, setIsConnectingWallet] = useState(false);
-
-  const selectedDispute =
-    selectedDisputeId === null
-      ? null
-      : disputes.find((dispute) => dispute.id === selectedDisputeId) ?? null;
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -242,23 +310,20 @@ export default function App() {
   };
 
   const handleNavigate = (page: string) => {
-    setCurrentPage(page as Page);
-    setSelectedDisputeId(null);
+    if (page === 'home') {
+      navigate('/');
+    } else if (page === 'dashboard') {
+      navigate('/dashboard');
+    } else if (page === 'submit') {
+      navigate('/submit');
+    } else {
+      navigate(`/${page}`);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleViewDispute = (id: string) => {
-    const dispute = disputes.find((entry) => entry.id === id);
-    if (dispute) {
-      setSelectedDisputeId(dispute.id);
-      setCurrentPage('dispute');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleBackToDashboard = () => {
-    setSelectedDisputeId(null);
-    setCurrentPage('dashboard');
+    navigate(`/dispute/${id}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -568,6 +633,13 @@ export default function App() {
     }
   };
 
+  // Determine current page name for Header
+  const currentPath = window.location.pathname;
+  let currentPage: string = 'home';
+  if (currentPath.startsWith('/dashboard')) currentPage = 'dashboard';
+  else if (currentPath.startsWith('/submit')) currentPage = 'submit';
+  else if (currentPath.startsWith('/dispute')) currentPage = 'dispute';
+
   return (
     <div className="min-h-screen bg-slate-950">
       <Header
@@ -579,49 +651,54 @@ export default function App() {
         isConnectingWallet={isConnectingWallet}
       />
 
-      {currentPage === 'home' && (
-        <>
-          <Hero onNavigate={handleNavigate} />
-          <HowItWorks />
-          <LiveDemo />
-          <Features />
-        </>
-      )}
+      <Routes>
+        <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
 
-      {currentPage === 'dashboard' && (
-        <Dashboard
-          disputes={disputes}
-          onViewDispute={handleViewDispute}
-          onNavigate={handleNavigate}
-          walletAddress={walletAddress}
+        <Route
+          path="/dashboard"
+          element={
+            <Dashboard
+              disputes={disputes}
+              onViewDispute={handleViewDispute}
+              onNavigate={handleNavigate}
+              walletAddress={walletAddress}
+            />
+          }
         />
-      )}
 
-      {currentPage === 'dispute' && selectedDispute && (
-        <DisputeDetail
-          dispute={selectedDispute}
-          onBack={handleBackToDashboard}
-          onRespond={handleRespondToDispute}
-          onRequestVerdict={handleRequestVerdict}
-          onClaimFunds={handleClaimFunds}
-          onAppeal={handleAppealVerdict}
-          isProcessingVerdict={processingDisputeIds.includes(selectedDispute.id)}
-          isSubmittingResponse={pendingActionKeys.includes(`${selectedDispute.id}:respond`)}
-          isClaimingFunds={pendingActionKeys.includes(`${selectedDispute.id}:claimFunds`)}
-          isAppealing={pendingActionKeys.includes(`${selectedDispute.id}:appealVerdict`)}
-          walletAddress={walletAddress}
+        <Route
+          path="/submit"
+          element={
+            <SubmitDispute
+              onNavigate={handleNavigate}
+              onCreateDispute={handleCreateDispute}
+              onViewDispute={handleViewDispute}
+              walletAddress={walletAddress}
+              isSubmitting={pendingActionKeys.some((key) => key.endsWith(':submit'))}
+            />
+          }
         />
-      )}
 
-      {currentPage === 'submit' && (
-        <SubmitDispute
-          onNavigate={handleNavigate}
-          onCreateDispute={handleCreateDispute}
-          onViewDispute={handleViewDispute}
-          walletAddress={walletAddress}
-          isSubmitting={pendingActionKeys.some((key) => key.endsWith(':submit'))}
+        <Route
+          path="/dispute/:id"
+          element={
+            <DisputeDetailPage
+              disputes={disputes}
+              onNavigate={handleNavigate}
+              onRespond={handleRespondToDispute}
+              onRequestVerdict={handleRequestVerdict}
+              onClaimFunds={handleClaimFunds}
+              onAppeal={handleAppealVerdict}
+              processingDisputeIds={processingDisputeIds}
+              pendingActionKeys={pendingActionKeys}
+              walletAddress={walletAddress}
+            />
+          }
         />
-      )}
+
+        {/* Fallback to home */}
+        <Route path="*" element={<HomePage onNavigate={handleNavigate} />} />
+      </Routes>
 
       <Footer />
     </div>
