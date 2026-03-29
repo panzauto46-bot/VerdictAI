@@ -23,16 +23,33 @@ export default function Header({
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = walletAddress
-    ? [
-        { id: 'dashboard', label: 'Dashboard' },
-        { id: 'submit', label: 'Submit Dispute' },
-      ]
-    : [
-        { id: 'home', label: 'Home' },
-        { id: 'dashboard', label: 'Dashboard' },
-        { id: 'submit', label: 'Submit Dispute' },
-      ];
+  const publicNavItems = [
+    { id: 'how-it-works', label: 'How It Works', isAnchor: true },
+    { id: 'demo', label: 'Live Demo', isAnchor: true },
+    { id: 'features', label: 'Features', isAnchor: true },
+  ];
+
+  const appNavItems = [
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'submit', label: 'Submit Dispute' },
+  ];
+
+  const navItems = walletAddress ? appNavItems : publicNavItems;
+
+  const handleNavClick = (item: { id: string, isAnchor?: boolean }) => {
+    if (item.isAnchor) {
+      if (currentPage !== 'home') {
+        onNavigate('home');
+        setTimeout(() => {
+          document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      onNavigate(item.id);
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
@@ -56,7 +73,7 @@ export default function Header({
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => onNavigate(item.id)}
+                onClick={() => handleNavClick(item)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   currentPage === item.id
                     ? 'bg-violet-600 text-white'
@@ -117,7 +134,7 @@ export default function Header({
                 <button
                   key={item.id}
                   onClick={() => {
-                    onNavigate(item.id);
+                    handleNavClick(item);
                     setMobileMenuOpen(false);
                   }}
                   className={`px-4 py-3 rounded-lg text-sm font-medium text-left transition-all ${
