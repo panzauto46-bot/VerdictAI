@@ -133,12 +133,21 @@ html {
   }
 }
 
-@keyframes hero-ring-breath {
+@keyframes hero-cluster-float {
   0%, 100% {
-    opacity: 0.28;
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    opacity: 0.5;
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes hero-ring-breath {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
   }
 }
 
@@ -151,6 +160,17 @@ html {
   }
 }
 
+@keyframes hero-core-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translate3d(-50%, -50%, 80px) scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(-50%, -50%, 140px) scale(1.14);
+  }
+}
+
 .hero-3d-stage {
   perspective: 1200px;
   transform-style: preserve-3d;
@@ -160,24 +180,24 @@ html {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  animation: hero-gyro 28s linear infinite;
+  animation: hero-gyro 20s linear infinite, hero-cluster-float 8s ease-in-out infinite;
 }
 
 .hero-3d-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 34rem;
-  width: 34rem;
+  height: 38rem;
+  width: 38rem;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 54px rgba(255, 255, 255, 0.16);
   transform-style: preserve-3d;
-  animation: hero-ring-breath 5.5s ease-in-out infinite;
+  animation: hero-ring-breath 4.6s ease-in-out infinite;
 }
 
 .hero-3d-ring-a {
-  transform: translate3d(-50%, -50%, 0) rotateX(72deg) rotateY(12deg);
+  transform: translate3d(-50%, -50%, 0) rotateX(70deg) rotateY(10deg);
 }
 
 .hero-3d-ring-b {
@@ -190,15 +210,33 @@ html {
   animation-delay: 1.6s;
 }
 
+.hero-3d-ring-d {
+  transform: translate3d(-50%, -50%, 0) rotateX(36deg) rotateY(118deg);
+  animation-delay: 2.3s;
+}
+
+.hero-3d-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 16rem;
+  width: 16rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.34) 36%, rgba(255, 255, 255, 0.06) 64%, rgba(255, 255, 255, 0) 72%);
+  transform: translate3d(-50%, -50%, 80px);
+  filter: blur(0.5px);
+  animation: hero-core-pulse 5.2s ease-in-out infinite;
+}
+
 .hero-3d-node {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 0.85rem;
-  width: 0.85rem;
+  height: 1rem;
+  width: 1rem;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.9);
   animation: hero-node-float 6s ease-in-out infinite;
 }
 
@@ -223,8 +261,13 @@ html {
 
 @media (max-width: 768px) {
   .hero-3d-ring {
-    height: 25rem;
-    width: 25rem;
+    height: 28rem;
+    width: 28rem;
+  }
+
+  .hero-3d-core {
+    height: 11rem;
+    width: 11rem;
   }
 
   .hero-3d-node-a {

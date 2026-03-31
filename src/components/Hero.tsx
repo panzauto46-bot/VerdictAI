@@ -16,11 +16,13 @@ export default function Hero({ onNavigate }: HeroProps) {
       </div>
 
       {/* 3D Motion Layer */}
-      <div className="hero-3d-stage pointer-events-none absolute inset-0 opacity-80">
+      <div className="hero-3d-stage pointer-events-none absolute inset-0 opacity-95">
         <div className="hero-3d-cluster">
+          <div className="hero-3d-core" />
           <div className="hero-3d-ring hero-3d-ring-a" />
           <div className="hero-3d-ring hero-3d-ring-b" />
           <div className="hero-3d-ring hero-3d-ring-c" />
+          <div className="hero-3d-ring hero-3d-ring-d" />
           <div className="hero-3d-node hero-3d-node-a" />
           <div className="hero-3d-node hero-3d-node-b" />
           <div className="hero-3d-node hero-3d-node-c" />
