@@ -237,6 +237,11 @@ export default function HeroParticleField() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="hero-particle-field absolute inset-0 pointer-events-none" aria-hidden />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="hero-particle-field absolute inset-0 block h-full w-full pointer-events-none"
+      aria-hidden
+    />
+  );
 }
-
