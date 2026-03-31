@@ -26,9 +26,9 @@ export interface ReadinessSnapshot {
 export function getReadinessSnapshot(walletAddress: string | null): ReadinessSnapshot {
   const providerAvailable = Boolean(getEthereumProvider());
   const ipfsReady = hasConfiguredIpfs();
-  const verdictReady = hasConfiguredVerdictSource();
   const genLayerContractReady = hasConfiguredGenLayerContract();
   const legacyContractReady = hasConfiguredContract();
+  const verdictReady = hasConfiguredVerdictSource() || genLayerContractReady;
   const explorerReady = Boolean(appConfig.txExplorerBaseUrl);
 
   const items: ReadinessItem[] = [
@@ -42,7 +42,7 @@ export function getReadinessSnapshot(walletAddress: string | null): ReadinessSna
           ? 'Provider detected'
           : 'No provider detected',
       detail: walletAddress
-        ? 'The app can already create wallet-signed receipts and is ready to broadcast transactions once contract writes are configured.'
+        ? 'The wallet is connected. When GenLayer is configured correctly, live actions will broadcast on-chain instead of falling back to local receipts.'
         : providerAvailable
           ? 'An injected wallet provider is available. Connect it when you are ready to run transaction-backed flows.'
           : 'Install or open an injected wallet such as MetaMask to move beyond demo mode.',
@@ -60,9 +60,15 @@ export function getReadinessSnapshot(walletAddress: string | null): ReadinessSna
       id: 'verdict',
       label: 'Verdict Source',
       level: verdictReady ? 'ready' : 'attention',
-      summary: verdictReady ? 'Remote source configured' : 'Demo verdict fallback',
+      summary: hasConfiguredVerdictSource()
+        ? 'Remote source configured'
+        : genLayerContractReady
+          ? 'On-chain verdict reads available'
+          : 'Demo verdict fallback',
       detail: verdictReady
-        ? 'Verdicts can be resolved through the configured GenLayer-facing source instead of the local simulator.'
+        ? hasConfiguredVerdictSource()
+          ? 'Verdicts can be resolved through the configured GenLayer-facing source instead of the local simulator.'
+          : 'Verdicts can be read directly from the configured GenLayer contract once the dispute reaches the verdict phase.'
         : 'The app still resolves verdicts through the built-in demo engine until a GenLayer verdict endpoint is provided.',
     },
     {
@@ -77,7 +83,7 @@ export function getReadinessSnapshot(walletAddress: string | null): ReadinessSna
             : 'Awaiting contract address',
       detail:
         genLayerContractReady
-          ? 'Submit/respond/verdict/claim/appeal actions can now attempt real writes through GenLayerJS on the configured chain.'
+          ? 'Submit/respond/verdict/claim/appeal actions now use strict GenLayer writes on the configured chain and report clear errors instead of silently downgrading.'
           : legacyContractReady
             ? 'A fallback ethers-style adapter is configured, but GenLayerJS remains the preferred Bradbury path.'
             : 'The adapter is prepared, but it still needs the deployed contract address. A legacy ABI JSON is only required if you use the fallback ethers-style path.',

@@ -1,6 +1,6 @@
 import { createClient } from 'genlayer-js';
 import { localnet, studionet, testnetAsimov, testnetBradbury } from 'genlayer-js/chains';
-import { TransactionStatus, type CalldataEncodable } from 'genlayer-js/types';
+import { ExecutionResult, TransactionStatus, type CalldataEncodable } from 'genlayer-js/types';
 import { type Address } from 'viem';
 import { appConfig, hasConfiguredGenLayerContract } from './appConfig';
 import { getEthereumProvider } from '../utils/wallet';
@@ -19,6 +19,11 @@ function getConfiguredChain() {
   return chainMap[requestedChain] ?? testnetBradbury;
 }
 
+function getConfiguredChainName(): ChainName {
+  const requestedChain = appConfig.genLayerChain as ChainName;
+  return chainMap[requestedChain] ? requestedChain : 'testnetBradbury';
+}
+
 export function createConfiguredGenLayerClient(walletAddress?: string) {
   const provider = getEthereumProvider();
 
@@ -28,6 +33,16 @@ export function createConfiguredGenLayerClient(walletAddress?: string) {
     account: walletAddress ? (walletAddress as Address) : undefined,
     provider: provider ?? undefined,
   });
+}
+
+export async function prepareGenLayerWallet() {
+  const provider = getEthereumProvider();
+  if (!provider) {
+    return;
+  }
+
+  const client = createConfiguredGenLayerClient();
+  await client.connect(getConfiguredChainName(), 'npm');
 }
 
 export async function getContractSchema(address?: string) {
@@ -58,10 +73,15 @@ export async function writeGenLayerContract(
     value: value ?? 0n,
   });
 
-  await client.waitForTransactionReceipt({
+  const receipt = await client.waitForTransactionReceipt({
     hash: txHash,
-    status: TransactionStatus.ACCEPTED,
+    status: TransactionStatus.FINALIZED,
   });
+
+  if (receipt.txExecutionResultName !== ExecutionResult.FINISHED_WITH_RETURN) {
+    const executionLabel = receipt.txExecutionResultName ?? 'UNKNOWN';
+    throw new Error(`GenLayer transaction finalized without a successful execution (${executionLabel}).`);
+  }
 
   return txHash;
 }

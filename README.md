@@ -237,7 +237,7 @@ VerdictAI/
 | Property | Value |
 |----------|-------|
 | **Network** | GenLayer Bradbury Testnet |
-| **Address** | `0x2b468A6b65e028c149cbFA0106815039dBED481f` |
+| **Address** | `0x82dF22192e2a54805bEa3737EAF29F3A717AfC95` |
 | **Language** | Python (GenLayer SDK) |
 | **Studio** | [studio.genlayer.com](https://studio.genlayer.com) |
 
@@ -322,8 +322,8 @@ Edit `.env.local`:
 ```env
 # GenLayer network
 VITE_GENLAYER_CHAIN=studionet
-VITE_GENLAYER_ENDPOINT=https://studio.genlayer.com
-VITE_GENLAYER_CONTRACT_ADDRESS=0x2b468A6b65e028c149cbFA0106815039dBED481f
+VITE_GENLAYER_ENDPOINT=https://studio.genlayer.com/api
+VITE_GENLAYER_CONTRACT_ADDRESS=0x82dF22192e2a54805bEa3737EAF29F3A717AfC95
 
 # Optional: IPFS for evidence uploads
 VITE_PINATA_JWT=your_pinata_jwt_token
@@ -423,7 +423,7 @@ The official `@verdictai/sdk` package provides a clean API for any dApp to integ
 import { createVerdictAI } from '@verdictai/sdk';
 
 const vai = createVerdictAI({
-  contractAddress: '0x2b468A6b65e028c149cbFA0106815039dBED481f',
+  contractAddress: '0x82dF22192e2a54805bEa3737EAF29F3A717AfC95',
   chain: 'testnetBradbury',
 });
 

@@ -9,7 +9,7 @@
  * import { VerdictAI } from '@verdictai/sdk';
  * 
  * const vai = new VerdictAI({
- *   contractAddress: '0x2b468A6b65e028c149cbFA0106815039dBED481f',
+ *   contractAddress: '0x82dF22192e2a54805bEa3737EAF29F3A717AfC95',
  *   chain: 'testnetBradbury',
  * });
  * 
@@ -353,7 +353,7 @@ export class VerdictAI {
  * import { createVerdictAI } from '@verdictai/sdk';
  * 
  * const vai = createVerdictAI({
- *   contractAddress: '0x2b468A6b65e028c149cbFA0106815039dBED481f',
+ *   contractAddress: '0x82dF22192e2a54805bEa3737EAF29F3A717AfC95',
  * });
  * ```
  */

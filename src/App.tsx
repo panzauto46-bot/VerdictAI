@@ -20,6 +20,8 @@ import {
 } from './types/dispute';
 import { calculateFeeBreakdown, calculateSettlementBreakdown } from './utils/fees';
 import { buildDemoWalletAddress, getEthereumProvider } from './utils/wallet';
+import { prepareGenLayerWallet } from './services/genlayerClient';
+import { fetchOnChainDisputeSnapshot, mergeOnChainDisputeSnapshot } from './services/onchainDisputeSync';
 import {
   appealVerdictAction,
   claimFundsAction,
@@ -346,6 +348,23 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const syncDisputeFromChain = async (dispute: Dispute): Promise<Dispute> => {
+    if (dispute.serviceMode !== 'genlayer') {
+      return dispute;
+    }
+
+    try {
+      const snapshot = await fetchOnChainDisputeSnapshot(dispute.id);
+      if (!snapshot) {
+        return dispute;
+      }
+
+      return hydrateDispute(mergeOnChainDisputeSnapshot(dispute, snapshot));
+    } catch {
+      return dispute;
+    }
+  };
+
   const finalizeVerdictProcessing = async (sourceDispute: Dispute, appeal: boolean) => {
     const disputeId = sourceDispute.id;
     try {
@@ -398,6 +417,12 @@ export default function App() {
     try {
       const provider = getEthereumProvider();
       if (provider) {
+        try {
+          await prepareGenLayerWallet();
+        } catch {
+          // Continue with account access so browser wallets that do not support the snap can still connect.
+        }
+
         try {
           const accounts = await provider.request({ method: 'eth_requestAccounts' }) as string[];
           if (Array.isArray(accounts) && accounts.length > 0) {
@@ -461,8 +486,10 @@ export default function App() {
         ],
       });
 
-      setDisputes((currentDisputes) => [newDispute, ...currentDisputes]);
-      return newDispute;
+      const syncedDispute = await syncDisputeFromChain(newDispute);
+
+      setDisputes((currentDisputes) => [syncedDispute, ...currentDisputes]);
+      return syncedDispute;
     } finally {
       stopPendingAction(pendingKey);
     }
@@ -500,12 +527,13 @@ export default function App() {
           ...(currentDispute.transactions ?? []),
         ],
       });
+      const syncedDispute = await syncDisputeFromChain(reviewingDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? reviewingDispute : entry
+        entry.id === disputeId ? syncedDispute : entry
       )));
 
-      void finalizeVerdictProcessing(reviewingDispute, isAppealReview);
+      void finalizeVerdictProcessing(syncedDispute, isAppealReview);
     } catch (error) {
       const message = getErrorMessage(error);
       appendTransactionToDispute(
@@ -553,11 +581,13 @@ export default function App() {
         ],
       });
 
+      const syncedDispute = await syncDisputeFromChain(updatedDispute);
+
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? updatedDispute : entry
+        entry.id === disputeId ? syncedDispute : entry
       )));
 
-      void handleRequestVerdict(disputeId, updatedDispute);
+      void handleRequestVerdict(disputeId, syncedDispute);
     } catch (error) {
       appendTransactionToDispute(
         disputeId,
@@ -580,20 +610,20 @@ export default function App() {
     try {
       const receipt = await claimFundsAction(currentDispute, walletAddress);
       const enforcedAt = new Date().toISOString();
+      const optimisticDispute = hydrateDispute({
+        ...currentDispute,
+        status: 'enforced',
+        enforcedAt,
+        serviceMode: receipt.mode,
+        transactions: [
+          createSuccessTransaction('claimFunds', 'Funds claimed / enforcement completed', receipt),
+          ...(currentDispute.transactions ?? []),
+        ],
+      });
+      const syncedDispute = await syncDisputeFromChain(optimisticDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId
-          ? hydrateDispute({
-              ...entry,
-              status: 'enforced',
-              enforcedAt,
-              serviceMode: receipt.mode,
-              transactions: [
-                createSuccessTransaction('claimFunds', 'Funds claimed / enforcement completed', receipt),
-                ...(entry.transactions ?? []),
-              ],
-            })
-          : entry
+        entry.id === disputeId ? syncedDispute : entry
       )));
     } catch (error) {
       appendTransactionToDispute(
@@ -632,11 +662,13 @@ export default function App() {
         ],
       });
 
+      const syncedDispute = await syncDisputeFromChain(updatedDispute);
+
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? updatedDispute : entry
+        entry.id === disputeId ? syncedDispute : entry
       )));
 
-      void handleRequestVerdict(disputeId, updatedDispute);
+      void handleRequestVerdict(disputeId, syncedDispute);
     } catch (error) {
       appendTransactionToDispute(
         disputeId,

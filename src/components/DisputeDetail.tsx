@@ -77,7 +77,7 @@ export default function DisputeDetail({
   useEffect(() => {
     setResponseForm({
       respondentName: dispute.partyB.name,
-      respondentAddress: walletAddress ?? dispute.partyB.address,
+      respondentAddress: dispute.partyB.address || walletAddress || '',
       claim: respondentHasSubmitted ? dispute.partyB.claim : '',
       evidenceHash: dispute.partyB.evidenceHash ?? '',
       stakeAmount: dispute.partyB.stake > 0 ? String(dispute.partyB.stake) : String(dispute.partyA.stake),
@@ -266,8 +266,14 @@ export default function DisputeDetail({
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input type="text" value={responseForm.respondentName} onChange={(event) => setResponseForm({ ...responseForm, respondentName: event.target.value })} placeholder="Respondent name / handle" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500" />
-                <input type="text" value={responseForm.respondentAddress} onChange={(event) => setResponseForm({ ...responseForm, respondentAddress: event.target.value })} placeholder="Respondent wallet address" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono" />
+                <input type="text" value={responseForm.respondentAddress} readOnly placeholder="Respondent wallet address" className="w-full px-4 py-3 bg-slate-800/70 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none font-mono cursor-not-allowed" />
               </div>
+
+              {walletAddress && responseForm.respondentAddress && walletAddress.toLowerCase() !== responseForm.respondentAddress.toLowerCase() && (
+                <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+                  The connected wallet does not match the designated respondent address for this dispute. On-chain response attempts will fail until the correct respondent wallet is connected.
+                </div>
+              )}
 
               <textarea value={responseForm.claim} onChange={(event) => setResponseForm({ ...responseForm, claim: event.target.value })} rows={4} placeholder="Provide the respondent version of events..." className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 resize-none" />
 

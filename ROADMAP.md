@@ -44,7 +44,7 @@ All 7 contract methods tested and verified on GenLayer Studio:
 ✅ withdraw_funds      → FINALIZED (SUCCESS)
 ```
 
-**Contract Address:** `0x2b468A6b65e028c149cbFA0106815039dBED481f`
+**Contract Address:** `0x82dF22192e2a54805bEa3737EAF29F3A717AfC95`
 
 ---
 

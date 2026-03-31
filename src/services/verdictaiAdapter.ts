@@ -1,6 +1,6 @@
 import { BrowserProvider, Contract, type InterfaceAbi, keccak256, parseEther, toUtf8Bytes } from 'ethers';
 import { ActionReceipt, Dispute, DisputeResponseInput, NewDisputeInput, ServiceMode } from '../types/dispute';
-import { appConfig, hasConfiguredContract } from './appConfig';
+import { appConfig, hasConfiguredContract, hasConfiguredGenLayerContract } from './appConfig';
 import { readGenLayerContract, writeGenLayerContract } from './genlayerClient';
 import { getEthereumProvider } from '../utils/wallet';
 
@@ -72,6 +72,18 @@ async function signActionReceipt(action: ContractAction, payload: object, wallet
   );
 }
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message.trim();
+  }
+
+  return 'Unknown error';
+}
+
+function shouldRequireStrictLiveWrite(walletAddress: string | null): boolean {
+  return Boolean(walletAddress && getEthereumProvider() && hasConfiguredGenLayerContract());
+}
+
 async function resolveCanonicalDisputeId(walletAddress: string): Promise<string | undefined> {
   try {
     const result = await readGenLayerContract('get_latest_dispute_id_by_claimant', [walletAddress], walletAddress);
@@ -114,8 +126,11 @@ async function attemptContractWrite(
   action: ContractAction,
   walletAddress: string,
   args: unknown[],
-  valueEth?: number
+  valueEth?: number,
+  options?: { strictGenLayer?: boolean }
 ): Promise<ActionReceipt | null> {
+  let genLayerError: unknown;
+
   try {
     const genLayerTxHash = await writeGenLayerContract(
       walletAddress,
@@ -127,8 +142,12 @@ async function attemptContractWrite(
     if (genLayerTxHash) {
       return buildReceipt('genlayer', genLayerTxHash, `${action} broadcast through the GenLayerJS client.`);
     }
-  } catch {
-    // Fall through to any configured ethers-style adapter.
+  } catch (error) {
+    genLayerError = error;
+  }
+
+  if (options?.strictGenLayer) {
+    throw new Error(`GenLayer write failed for ${action}: ${getErrorMessage(genLayerError)}`);
   }
 
   if (!hasConfiguredContract()) {
@@ -178,9 +197,19 @@ export async function submitDisputeAction(
   ];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('submit_dispute', walletAddress, args, input.stakeAmount);
+    const contractReceipt = await attemptContractWrite(
+      'submit_dispute',
+      walletAddress,
+      args,
+      input.stakeAmount,
+      { strictGenLayer: shouldRequireStrictLiveWrite(walletAddress) }
+    );
     if (contractReceipt) {
       const contractDisputeId = await resolveCanonicalDisputeId(walletAddress);
+      if (contractReceipt.mode === 'genlayer' && !contractDisputeId) {
+        throw new Error('GenLayer submission succeeded, but the app could not resolve the on-chain dispute ID.');
+      }
+
       return contractDisputeId
         ? { ...contractReceipt, contractDisputeId }
         : contractReceipt;
@@ -207,7 +236,13 @@ export async function respondToDisputeAction(
   ];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('respond_to_dispute', walletAddress, args, input.stakeAmount);
+    const contractReceipt = await attemptContractWrite(
+      'respond_to_dispute',
+      walletAddress,
+      args,
+      input.stakeAmount,
+      { strictGenLayer: shouldRequireStrictLiveWrite(walletAddress) }
+    );
     if (contractReceipt) {
       return contractReceipt;
     }
@@ -222,7 +257,13 @@ export async function requestVerdictAction(dispute: Dispute, walletAddress: stri
   const args = [dispute.id];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('request_ai_verdict', walletAddress, args);
+    const contractReceipt = await attemptContractWrite(
+      'request_ai_verdict',
+      walletAddress,
+      args,
+      undefined,
+      { strictGenLayer: shouldRequireStrictLiveWrite(walletAddress) }
+    );
     if (contractReceipt) {
       return contractReceipt;
     }
@@ -237,7 +278,13 @@ export async function claimFundsAction(dispute: Dispute, walletAddress: string |
   const args = [dispute.id];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('withdraw_funds', walletAddress, args);
+    const contractReceipt = await attemptContractWrite(
+      'withdraw_funds',
+      walletAddress,
+      args,
+      undefined,
+      { strictGenLayer: shouldRequireStrictLiveWrite(walletAddress) }
+    );
     if (contractReceipt) {
       return contractReceipt;
     }
@@ -252,7 +299,13 @@ export async function appealVerdictAction(dispute: Dispute, walletAddress: strin
   const args = [dispute.id];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('appeal_verdict', walletAddress, args);
+    const contractReceipt = await attemptContractWrite(
+      'appeal_verdict',
+      walletAddress,
+      args,
+      undefined,
+      { strictGenLayer: shouldRequireStrictLiveWrite(walletAddress) }
+    );
     if (contractReceipt) {
       return contractReceipt;
     }

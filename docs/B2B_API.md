@@ -20,7 +20,7 @@ npm install @verdictai/sdk genlayer-js
 import { createVerdictAI } from '@verdictai/sdk';
 
 const vai = createVerdictAI({
-  contractAddress: '0x2b468A6b65e028c149cbFA0106815039dBED481f',
+  contractAddress: '0x82dF22192e2a54805bEa3737EAF29F3A717AfC95',
   chain: 'testnetBradbury',
 });
 ```
@@ -245,7 +245,7 @@ vai.on('dispute:enforced', (disputeId) => { /* ... */ });
 | Property | Value |
 |----------|-------|
 | **Network** | GenLayer Bradbury Testnet |
-| **Contract Address** | `0x2b468A6b65e028c149cbFA0106815039dBED481f` |
+| **Contract Address** | `0x82dF22192e2a54805bEa3737EAF29F3A717AfC95` |
 | **Language** | Python (GenLayer SDK) |
 | **AI Validators** | 5 (GPT-4, Claude, Gemini, LLaMA, DeepSeek) |
 | **Consensus** | Equivalence Principle (`strict_eq`) |
