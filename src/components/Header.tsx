@@ -1,4 +1,4 @@
-import { Scale, Menu, X, LogOut, Wallet } from 'lucide-react';
+import { Scale, Menu, X, LogOut, Wallet, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { getWalletModeLabel, getWalletOptions, shortenAddress, type WalletProviderId } from '../utils/wallet';
 
@@ -90,7 +90,7 @@ export default function Header({
           </nav>
 
           {/* Connect Wallet Button */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 relative">
             {walletAddress ? (
               <div className="flex items-center gap-2">
                 <div
@@ -110,14 +110,62 @@ export default function Header({
                 </button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => setWalletPickerOpen(true)}
-                disabled={isConnectingWallet}
-                className="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-violet-500/25"
-              >
-                {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setWalletPickerOpen((currentState) => !currentState)}
+                  disabled={isConnectingWallet}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-violet-500/25"
+                >
+                  {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+
+                {walletPickerOpen && (
+                  <div className="absolute right-0 top-[calc(100%+0.75rem)] z-[60] w-80 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-2xl">
+                    <div className="mb-3">
+                      <h2 className="text-sm font-semibold text-white">Choose Wallet</h2>
+                      <p className="mt-1 text-xs text-slate-400">
+                        Pick the wallet you want VerdictAI to use.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      {walletOptions.map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => {
+                            void onConnectWallet(option.id);
+                            setWalletPickerOpen(false);
+                          }}
+                          disabled={!option.available || isConnectingWallet}
+                          className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
+                              <Wallet className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <div className="text-sm font-medium text-white">{option.label}</div>
+                                <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                                  {option.available ? 'Available' : 'Not detected'}
+                                </span>
+                              </div>
+                              <p className="mt-1 text-xs text-slate-400">{option.description}</p>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    <p className="mt-3 text-[11px] text-slate-500">
+                      MetaMask is recommended for GenLayer.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -169,80 +217,47 @@ export default function Header({
                   </button>
                 </div>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setWalletPickerOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  disabled={isConnectingWallet}
-                  className="mt-2 px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium rounded-lg"
-                >
-                  {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
-                </button>
+                <div className="mt-2 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setWalletPickerOpen((currentState) => !currentState)}
+                    disabled={isConnectingWallet}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium rounded-lg"
+                  >
+                    {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+
+                  {walletPickerOpen && (
+                    <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3">
+                      {walletOptions.map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => {
+                            void onConnectWallet(option.id);
+                            setWalletPickerOpen(false);
+                            setMobileMenuOpen(false);
+                          }}
+                          disabled={!option.available || isConnectingWallet}
+                          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-3 text-left text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span>{option.label}</span>
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                              {option.available ? 'Available' : 'Not detected'}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </nav>
           </div>
         )}
       </div>
-
-      {walletPickerOpen && !walletAddress && (
-        <div className="fixed inset-0 z-[60] overflow-y-auto bg-slate-950/80 px-4 py-6 md:py-10">
-          <div className="flex min-h-full items-center justify-center">
-            <div className="my-auto w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-lg font-semibold text-white">Choose Wallet</h2>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Pick the wallet you want VerdictAI to use for this session.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setWalletPickerOpen(false)}
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                {walletOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => {
-                      void onConnectWallet(option.id);
-                      setWalletPickerOpen(false);
-                    }}
-                    disabled={!option.available || isConnectingWallet}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
-                        <Wallet className="h-5 w-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium text-white">{option.label}</div>
-                          <span className={`rounded-full px-2 py-0.5 text-xs ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
-                            {option.available ? 'Available' : 'Not detected'}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-sm text-slate-400">{option.description}</p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              <p className="mt-4 text-xs text-slate-500">
-                MetaMask is recommended for GenLayer. Phantom may still reject unsupported networks.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
