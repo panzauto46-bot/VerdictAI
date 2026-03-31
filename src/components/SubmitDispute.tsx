@@ -27,6 +27,10 @@ interface SubmitDisputeProps {
   isSubmitting: boolean;
 }
 
+function isValidEvmAddress(address: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
+}
+
 export default function SubmitDispute({
   onNavigate,
   onCreateDispute,
@@ -83,6 +87,27 @@ export default function SubmitDispute({
 
   const latestReceipt = submittedDispute?.transactions?.[0];
   const uploadedEvidenceUrl = getEvidenceUrl(uploadedEvidence ?? formData.evidenceHash);
+  const disputeValueNumber = Number.parseFloat(formData.disputeValue);
+  const stakeAmountNumber = Number.parseFloat(formData.stakeAmount);
+  const step3ValidationMessage = (() => {
+    if (!isValidEvmAddress(formData.claimantAddress)) {
+      return 'Claimant wallet address harus format EVM valid (0x + 40 karakter hex).';
+    }
+
+    if (!isValidEvmAddress(formData.respondentAddress)) {
+      return 'Respondent wallet address harus format EVM valid (0x + 40 karakter hex).';
+    }
+
+    if (!Number.isFinite(disputeValueNumber) || disputeValueNumber <= 0) {
+      return 'Dispute value harus lebih dari 0 ETH.';
+    }
+
+    if (!Number.isFinite(stakeAmountNumber) || stakeAmountNumber <= 0) {
+      return 'Stake amount harus lebih dari 0 ETH.';
+    }
+
+    return null;
+  })();
 
   const categories = [
     {
@@ -154,6 +179,30 @@ export default function SubmitDispute({
     }
 
     setSubmitError(null);
+    const claimantAddress = formData.claimantAddress.trim();
+    const respondentAddress = formData.respondentAddress.trim();
+    const disputeValue = Number.parseFloat(formData.disputeValue);
+    const stakeAmount = Number.parseFloat(formData.stakeAmount);
+
+    if (!isValidEvmAddress(claimantAddress)) {
+      setSubmitError('Claimant wallet address tidak valid. Gunakan format 0x + 40 karakter hex.');
+      return;
+    }
+
+    if (!isValidEvmAddress(respondentAddress)) {
+      setSubmitError('Respondent wallet address tidak valid. Gunakan format 0x + 40 karakter hex.');
+      return;
+    }
+
+    if (!Number.isFinite(disputeValue) || disputeValue <= 0) {
+      setSubmitError('Dispute value harus lebih dari 0 ETH.');
+      return;
+    }
+
+    if (!Number.isFinite(stakeAmount) || stakeAmount <= 0) {
+      setSubmitError('Stake amount harus lebih dari 0 ETH.');
+      return;
+    }
 
     try {
       const manualEvidence = !uploadedEvidence && formData.evidenceHash.trim()
@@ -165,14 +214,14 @@ export default function SubmitDispute({
         title: formData.title,
         description: formData.description,
         claimantName: formData.claimantName,
-        claimantAddress: formData.claimantAddress,
+        claimantAddress,
         claim: formData.claim,
         evidenceHash: formData.evidenceHash,
         evidence: uploadedEvidence ?? manualEvidence,
         respondentName: formData.respondentName,
-        respondentAddress: formData.respondentAddress,
-        disputeValue: Number.parseFloat(formData.disputeValue),
-        stakeAmount: Number.parseFloat(formData.stakeAmount),
+        respondentAddress,
+        disputeValue,
+        stakeAmount,
       });
 
       setSubmittedDispute(createdDispute);
@@ -351,6 +400,9 @@ export default function SubmitDispute({
                       placeholder="0x..."
                       className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 font-mono"
                     />
+                    {formData.claimantAddress.trim() && !isValidEvmAddress(formData.claimantAddress) && (
+                      <p className="mt-2 text-xs text-zinc-400">Gunakan format alamat EVM valid: 0x + 40 karakter hex.</p>
+                    )}
                   </div>
                 </div>
 
@@ -458,7 +510,13 @@ export default function SubmitDispute({
                 </button>
                 <button
                   onClick={() => setStep(3)}
-                  disabled={!formData.claimantName || !formData.claimantAddress || !formData.title || !formData.claim}
+                  disabled={
+                    !formData.claimantName
+                    || !formData.claimantAddress
+                    || !formData.title
+                    || !formData.claim
+                    || !isValidEvmAddress(formData.claimantAddress)
+                  }
                   className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all"
                 >
                   Continue
@@ -503,6 +561,9 @@ export default function SubmitDispute({
                       value={formData.disputeValue}
                       onChange={(event) => setFormData({ ...formData, disputeValue: event.target.value })}
                       placeholder="0.00"
+                      min="0"
+                      step="0.0001"
+                      inputMode="decimal"
                       className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                     />
                   </div>
@@ -513,6 +574,9 @@ export default function SubmitDispute({
                       value={formData.stakeAmount}
                       onChange={(event) => setFormData({ ...formData, stakeAmount: event.target.value })}
                       placeholder="0.00"
+                      min="0"
+                      step="0.0001"
+                      inputMode="decimal"
                       className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                     />
                   </div>
@@ -566,6 +630,12 @@ export default function SubmitDispute({
                     {submitError}
                   </div>
                 )}
+
+                {!submitError && step3ValidationMessage && (
+                  <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-sm text-zinc-300">
+                    {step3ValidationMessage}
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4">
@@ -582,6 +652,7 @@ export default function SubmitDispute({
                     !formData.respondentAddress ||
                     !formData.disputeValue ||
                     !formData.stakeAmount ||
+                    Boolean(step3ValidationMessage) ||
                     isSubmitting
                   }
                   className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2"

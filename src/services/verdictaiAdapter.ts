@@ -1,4 +1,12 @@
-import { BrowserProvider, Contract, type InterfaceAbi, keccak256, parseEther, toUtf8Bytes } from 'ethers';
+import {
+  BrowserProvider,
+  Contract,
+  type InterfaceAbi,
+  formatEther,
+  keccak256,
+  parseEther,
+  toUtf8Bytes,
+} from 'ethers';
 import { ActionReceipt, Dispute, DisputeResponseInput, NewDisputeInput, ServiceMode } from '../types/dispute';
 import { appConfig, hasConfiguredContract, hasConfiguredGenLayerContract } from './appConfig';
 import { readGenLayerContract, writeGenLayerContract } from './genlayerClient';
@@ -72,12 +80,82 @@ async function signActionReceipt(action: ContractAction, payload: object, wallet
   );
 }
 
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.message.trim()) {
-    return error.message.trim();
+function normalizeErrorMessage(message: string): string {
+  const trimmed = message.trim();
+  const lowered = trimmed.toLowerCase();
+
+  if (!trimmed) {
+    return 'Unknown error';
   }
 
-  return 'Unknown error';
+  if (
+    lowered.includes('insufficient funds')
+    || lowered.includes('insufficient balance')
+    || lowered.includes('exceeds balance')
+    || lowered.includes('not enough balance')
+  ) {
+    return 'Insufficient GEN balance. Please top up your wallet and retry.';
+  }
+
+  if (
+    lowered.includes('user rejected')
+    || lowered.includes('user denied')
+    || lowered.includes('rejected the request')
+    || lowered.includes('transaction was rejected')
+  ) {
+    return 'Transaction was cancelled in your wallet.';
+  }
+
+  if (lowered.includes('unsupported network')) {
+    return 'Wallet is connected to an unsupported network. Switch to GenLayer Studio Network and retry.';
+  }
+
+  if (lowered.includes('finalized without a successful execution')) {
+    return 'GenLayer finalized the transaction, but smart-contract execution failed. Check balance, input fields, and chain configuration.';
+  }
+
+  if (lowered.includes('execution reverted:')) {
+    const revertReason = trimmed.split(/execution reverted:/i)[1]?.trim();
+    if (revertReason) {
+      return `Transaction reverted: ${revertReason}`;
+    }
+  }
+
+  return trimmed;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return normalizeErrorMessage(error.message);
+  }
+
+  if (typeof error === 'string') {
+    return normalizeErrorMessage(error);
+  }
+
+  return normalizeErrorMessage('Unknown error');
+}
+
+async function getWalletBalanceWei(walletAddress: string): Promise<bigint | null> {
+  const provider = getEthereumProvider();
+  if (!provider) {
+    return null;
+  }
+
+  try {
+    const balance = await provider.request({
+      method: 'eth_getBalance',
+      params: [walletAddress, 'latest'],
+    });
+
+    if (typeof balance === 'string') {
+      return BigInt(balance);
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
 }
 
 function shouldRequireStrictLiveWrite(walletAddress: string | null): boolean {
@@ -130,13 +208,23 @@ async function attemptContractWrite(
   options?: { strictGenLayer?: boolean }
 ): Promise<ActionReceipt | null> {
   let genLayerError: unknown;
+  const txValueWei = valueEth && valueEth > 0 ? parseEther(valueEth.toFixed(6)) : 0n;
+
+  if (txValueWei > 0n) {
+    const walletBalanceWei = await getWalletBalanceWei(walletAddress);
+    if (walletBalanceWei !== null && walletBalanceWei < txValueWei) {
+      throw new Error(
+        `Insufficient balance. Required ${formatEther(txValueWei)} GEN, available ${formatEther(walletBalanceWei)} GEN.`
+      );
+    }
+  }
 
   try {
     const genLayerTxHash = await writeGenLayerContract(
       walletAddress,
       action,
       args,
-      valueEth && valueEth > 0 ? parseEther(valueEth.toFixed(6)) : undefined
+      txValueWei > 0n ? txValueWei : undefined
     );
 
     if (genLayerTxHash) {
@@ -169,7 +257,7 @@ async function attemptContractWrite(
       return null;
     }
 
-    const tx = await method(...args, valueEth && valueEth > 0 ? { value: parseEther(valueEth.toFixed(6)) } : undefined);
+    const tx = await method(...args, txValueWei > 0n ? { value: txValueWei } : undefined);
     await tx.wait();
 
     return buildReceipt('contract', tx.hash as string, `${action} broadcast to the configured contract.`);
