@@ -187,57 +187,59 @@ export default function Header({
       </div>
 
       {walletPickerOpen && !walletAddress && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-white">Choose Wallet</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  Pick the wallet you want VerdictAI to use for this session.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setWalletPickerOpen(false)}
-                className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {walletOptions.map((option) => (
+        <div className="fixed inset-0 z-[60] overflow-y-auto bg-slate-950/80 px-4 py-6 md:py-10">
+          <div className="flex min-h-full items-center justify-center">
+            <div className="my-auto w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Choose Wallet</h2>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Pick the wallet you want VerdictAI to use for this session.
+                  </p>
+                </div>
                 <button
-                  key={option.id}
                   type="button"
-                  onClick={() => {
-                    void onConnectWallet(option.id);
-                    setWalletPickerOpen(false);
-                  }}
-                  disabled={!option.available || isConnectingWallet}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  onClick={() => setWalletPickerOpen(false)}
+                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
-                      <Wallet className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="font-medium text-white">{option.label}</div>
-                        <span className={`rounded-full px-2 py-0.5 text-xs ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
-                          {option.available ? 'Available' : 'Not detected'}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-slate-400">{option.description}</p>
-                    </div>
-                  </div>
+                  <X className="h-5 w-5" />
                 </button>
-              ))}
-            </div>
+              </div>
 
-            <p className="mt-4 text-xs text-slate-500">
-              MetaMask is recommended for GenLayer. Phantom may still reject unsupported networks.
-            </p>
+              <div className="space-y-3">
+                {walletOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => {
+                      void onConnectWallet(option.id);
+                      setWalletPickerOpen(false);
+                    }}
+                    disabled={!option.available || isConnectingWallet}
+                    className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
+                        <Wallet className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <div className="font-medium text-white">{option.label}</div>
+                          <span className={`rounded-full px-2 py-0.5 text-xs ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                            {option.available ? 'Available' : 'Not detected'}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm text-slate-400">{option.description}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="mt-4 text-xs text-slate-500">
+                MetaMask is recommended for GenLayer. Phantom may still reject unsupported networks.
+              </p>
+            </div>
           </div>
         </div>
       )}
