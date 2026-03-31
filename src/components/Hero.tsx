@@ -15,6 +15,19 @@ export default function Hero({ onNavigate }: HeroProps) {
         <div className="absolute bottom-[-120px] right-[-90px] h-[320px] w-[320px] rounded-full bg-white/6 blur-3xl animate-pulse delay-1000" />
       </div>
 
+      {/* 3D Motion Layer */}
+      <div className="hero-3d-stage pointer-events-none absolute inset-0 opacity-80">
+        <div className="hero-3d-cluster">
+          <div className="hero-3d-ring hero-3d-ring-a" />
+          <div className="hero-3d-ring hero-3d-ring-b" />
+          <div className="hero-3d-ring hero-3d-ring-c" />
+          <div className="hero-3d-node hero-3d-node-a" />
+          <div className="hero-3d-node hero-3d-node-b" />
+          <div className="hero-3d-node hero-3d-node-c" />
+          <div className="hero-3d-node hero-3d-node-d" />
+        </div>
+      </div>
+
       {/* Grid Pattern */}
       <div
         className="absolute inset-0 opacity-25"
