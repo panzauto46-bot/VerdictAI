@@ -6,6 +6,7 @@ import HeroParticleField from './components/HeroParticleField';
 import HowItWorks from './components/HowItWorks';
 import Features from './components/Features';
 import LiveDemo from './components/LiveDemo';
+import JudgingChecklist from './components/JudgingChecklist';
 import Dashboard from './components/Dashboard';
 import DisputeDetail from './components/DisputeDetail';
 import SubmitDispute from './components/SubmitDispute';
@@ -186,6 +187,23 @@ function createErrorTransaction(
   };
 }
 
+function createPendingTransaction(
+  kind: DisputeTransaction['kind'],
+  label: string,
+  mode: ServiceMode = 'wallet',
+  message = 'Broadcasting transaction...'
+): DisputeTransaction {
+  return {
+    id: buildTransactionId(),
+    kind,
+    status: 'pending',
+    mode,
+    label,
+    message,
+    createdAt: new Date().toISOString(),
+  };
+}
+
 function determineAppealRequester(dispute: Dispute): 'A' | 'B' {
   if (!dispute.verdict) {
     return 'B';
@@ -221,6 +239,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: string) => void }) {
         <HowItWorks />
         <LiveDemo />
         <Features />
+        <JudgingChecklist onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -360,6 +379,36 @@ export default function App() {
     )));
   };
 
+  const upsertTransactionOnDispute = (
+    disputeId: string,
+    pendingTransactionId: string,
+    transaction: DisputeTransaction
+  ) => {
+    setDisputes((currentDisputes) => currentDisputes.map((entry) => {
+      if (entry.id !== disputeId) {
+        return entry;
+      }
+
+      const existingTransactions = entry.transactions ?? [];
+      const targetIndex = existingTransactions.findIndex((item) => item.id === pendingTransactionId);
+
+      if (targetIndex === -1) {
+        return {
+          ...entry,
+          transactions: [transaction, ...existingTransactions],
+        };
+      }
+
+      const nextTransactions = [...existingTransactions];
+      nextTransactions[targetIndex] = transaction;
+
+      return {
+        ...entry,
+        transactions: nextTransactions,
+      };
+    }));
+  };
+
   const handleNavigate = (page: string) => {
     if (page === 'home') {
       navigate('/');
@@ -495,7 +544,12 @@ export default function App() {
     startPendingAction(pendingKey);
 
     try {
-      const receipt = await submitDisputeAction(optimisticDisputeId, { ...input, id: optimisticDisputeId }, walletAddress);
+      const receipt = await submitDisputeAction(
+        optimisticDisputeId,
+        { ...input, id: optimisticDisputeId },
+        walletAddress,
+        { forceDemo: input.preferredMode === 'demo' }
+      );
       const disputeId = receipt.contractDisputeId ?? optimisticDisputeId;
       const createdAt = new Date();
       const claimantEvidence = normalizeEvidenceReference(input.evidenceHash, input.evidence);
@@ -556,36 +610,54 @@ export default function App() {
       currentIds.includes(disputeId) ? currentIds : [...currentIds, disputeId]
     ));
 
+    const pendingTransaction = createPendingTransaction(
+      'requestVerdict',
+      isAppealReview ? 'Requesting appeal review' : 'Requesting AI review',
+      currentDispute.serviceMode ?? 'wallet',
+      'Waiting for validator acknowledgement...'
+    );
+    appendTransactionToDispute(disputeId, pendingTransaction);
+
     try {
       const receipt = await requestVerdictAction(currentDispute, walletAddress);
       const reviewStartedAt = currentDispute.reviewStartedAt ?? new Date().toISOString();
+      const successTransaction = createSuccessTransaction(
+        'requestVerdict',
+        isAppealReview ? 'Appeal review requested' : 'AI review requested',
+        receipt
+      );
+      upsertTransactionOnDispute(disputeId, pendingTransaction.id, successTransaction);
 
       const reviewingDispute = hydrateDispute({
         ...currentDispute,
         status: isAppealReview ? 'appealed' : 'reviewing',
         reviewStartedAt,
         serviceMode: receipt.mode,
-        transactions: [
-          createSuccessTransaction(
-            'requestVerdict',
-            isAppealReview ? 'Appeal review requested' : 'AI review requested',
-            receipt
-          ),
-          ...(currentDispute.transactions ?? []),
-        ],
       });
       const syncedDispute = await syncDisputeFromChain(reviewingDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? syncedDispute : entry
+        entry.id === disputeId
+          ? hydrateDispute({
+              ...syncedDispute,
+              transactions: entry.transactions ?? syncedDispute.transactions,
+            })
+          : entry
       )));
 
       void finalizeVerdictProcessing(syncedDispute, isAppealReview);
     } catch (error) {
       const message = getErrorMessage(error);
-      appendTransactionToDispute(
+      const errorTransaction = createErrorTransaction(
+        'requestVerdict',
+        'AI review request failed',
+        message,
+        currentDispute.serviceMode ?? 'demo'
+      );
+      upsertTransactionOnDispute(
         disputeId,
-        createErrorTransaction('requestVerdict', 'AI review request failed', message, currentDispute.serviceMode ?? 'demo')
+        pendingTransaction.id,
+        errorTransaction
       );
       setProcessingDisputeIds((currentIds) => currentIds.filter((currentId) => currentId !== disputeId));
       stopPendingAction(pendingKey);
@@ -600,11 +672,24 @@ export default function App() {
 
     const pendingKey = `${disputeId}:respond`;
     startPendingAction(pendingKey);
+    const pendingTransaction = createPendingTransaction(
+      'respond',
+      'Submitting respondent counter-evidence',
+      currentDispute.serviceMode ?? 'wallet',
+      'Waiting for transaction finalization...'
+    );
+    appendTransactionToDispute(disputeId, pendingTransaction);
 
     try {
       const receipt = await respondToDisputeAction(currentDispute, input, walletAddress);
       const respondentEvidence = normalizeEvidenceReference(input.evidenceHash, input.evidence);
       const respondedAt = new Date().toISOString();
+      const successTransaction = createSuccessTransaction(
+        'respond',
+        'Respondent submitted counter-evidence',
+        receipt
+      );
+      upsertTransactionOnDispute(disputeId, pendingTransaction.id, successTransaction);
 
       const updatedDispute = hydrateDispute({
         ...currentDispute,
@@ -622,23 +707,31 @@ export default function App() {
           evidence: respondentEvidence,
           stake: input.stakeAmount,
         },
-        transactions: [
-          createSuccessTransaction('respond', 'Respondent submitted counter-evidence', receipt),
-          ...(currentDispute.transactions ?? []),
-        ],
       });
 
       const syncedDispute = await syncDisputeFromChain(updatedDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? syncedDispute : entry
+        entry.id === disputeId
+          ? hydrateDispute({
+              ...syncedDispute,
+              transactions: entry.transactions ?? syncedDispute.transactions,
+            })
+          : entry
       )));
 
       void handleRequestVerdict(disputeId, syncedDispute);
     } catch (error) {
-      appendTransactionToDispute(
+      const errorTransaction = createErrorTransaction(
+        'respond',
+        'Respondent submission failed',
+        getErrorMessage(error),
+        currentDispute.serviceMode ?? 'demo'
+      );
+      upsertTransactionOnDispute(
         disputeId,
-        createErrorTransaction('respond', 'Respondent submission failed', getErrorMessage(error), currentDispute.serviceMode ?? 'demo')
+        pendingTransaction.id,
+        errorTransaction
       );
     } finally {
       stopPendingAction(pendingKey);
@@ -653,29 +746,50 @@ export default function App() {
 
     const pendingKey = `${disputeId}:claimFunds`;
     startPendingAction(pendingKey);
+    const pendingTransaction = createPendingTransaction(
+      'claimFunds',
+      'Claiming funds',
+      currentDispute.serviceMode ?? 'wallet',
+      'Waiting for enforcement transaction...'
+    );
+    appendTransactionToDispute(disputeId, pendingTransaction);
 
     try {
       const receipt = await claimFundsAction(currentDispute, walletAddress);
       const enforcedAt = new Date().toISOString();
+      const successTransaction = createSuccessTransaction(
+        'claimFunds',
+        'Funds claimed / enforcement completed',
+        receipt
+      );
+      upsertTransactionOnDispute(disputeId, pendingTransaction.id, successTransaction);
       const optimisticDispute = hydrateDispute({
         ...currentDispute,
         status: 'enforced',
         enforcedAt,
         serviceMode: receipt.mode,
-        transactions: [
-          createSuccessTransaction('claimFunds', 'Funds claimed / enforcement completed', receipt),
-          ...(currentDispute.transactions ?? []),
-        ],
       });
       const syncedDispute = await syncDisputeFromChain(optimisticDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? syncedDispute : entry
+        entry.id === disputeId
+          ? hydrateDispute({
+              ...syncedDispute,
+              transactions: entry.transactions ?? syncedDispute.transactions,
+            })
+          : entry
       )));
     } catch (error) {
-      appendTransactionToDispute(
+      const errorTransaction = createErrorTransaction(
+        'claimFunds',
+        'Claim funds failed',
+        getErrorMessage(error),
+        currentDispute.serviceMode ?? 'demo'
+      );
+      upsertTransactionOnDispute(
         disputeId,
-        createErrorTransaction('claimFunds', 'Claim funds failed', getErrorMessage(error), currentDispute.serviceMode ?? 'demo')
+        pendingTransaction.id,
+        errorTransaction
       );
     } finally {
       stopPendingAction(pendingKey);
@@ -690,11 +804,20 @@ export default function App() {
 
     const pendingKey = `${disputeId}:appealVerdict`;
     startPendingAction(pendingKey);
+    const pendingTransaction = createPendingTransaction(
+      'appealVerdict',
+      'Submitting appeal request',
+      currentDispute.serviceMode ?? 'wallet',
+      'Waiting for appeal transaction...'
+    );
+    appendTransactionToDispute(disputeId, pendingTransaction);
 
     try {
       const receipt = await appealVerdictAction(currentDispute, walletAddress);
       const reviewStartedAt = new Date().toISOString();
       const appealRequestedBy = determineAppealRequester(currentDispute);
+      const successTransaction = createSuccessTransaction('appealVerdict', 'Appeal requested', receipt);
+      upsertTransactionOnDispute(disputeId, pendingTransaction.id, successTransaction);
 
       const updatedDispute = hydrateDispute({
         ...currentDispute,
@@ -703,23 +826,31 @@ export default function App() {
         appealUsed: true,
         appealRequestedBy,
         serviceMode: receipt.mode,
-        transactions: [
-          createSuccessTransaction('appealVerdict', 'Appeal requested', receipt),
-          ...(currentDispute.transactions ?? []),
-        ],
       });
 
       const syncedDispute = await syncDisputeFromChain(updatedDispute);
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => (
-        entry.id === disputeId ? syncedDispute : entry
+        entry.id === disputeId
+          ? hydrateDispute({
+              ...syncedDispute,
+              transactions: entry.transactions ?? syncedDispute.transactions,
+            })
+          : entry
       )));
 
       void handleRequestVerdict(disputeId, syncedDispute);
     } catch (error) {
-      appendTransactionToDispute(
+      const errorTransaction = createErrorTransaction(
+        'appealVerdict',
+        'Appeal request failed',
+        getErrorMessage(error),
+        currentDispute.serviceMode ?? 'demo'
+      );
+      upsertTransactionOnDispute(
         disputeId,
-        createErrorTransaction('appealVerdict', 'Appeal request failed', getErrorMessage(error), currentDispute.serviceMode ?? 'demo')
+        pendingTransaction.id,
+        errorTransaction
       );
     } finally {
       stopPendingAction(pendingKey);

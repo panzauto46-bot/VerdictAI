@@ -7,7 +7,7 @@ interface HeroProps {
 
 export default function Hero({ onNavigate }: HeroProps) {
   return (
-    <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
+    <section className="relative z-10 min-h-screen overflow-hidden bg-transparent">
       {/* Monochrome Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/88 via-black/78 to-black/58" />
@@ -23,7 +23,7 @@ export default function Hero({ onNavigate }: HeroProps) {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
         <div className="text-center">
           {/* Badge */}
           <motion.div
@@ -42,7 +42,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-6 text-5xl font-bold text-white md:text-7xl"
+            className="mb-5 text-4xl font-bold text-white sm:text-6xl lg:text-7xl"
           >
             Trustless Disputes.
             <br />
@@ -58,7 +58,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto mb-12 max-w-3xl text-xl text-zinc-300"
+            className="mx-auto mb-10 max-w-3xl text-base text-zinc-200 sm:text-lg md:text-xl"
           >
             VerdictAI is a decentralized dispute resolution protocol powered by GenLayer's Intelligent
             Contracts. Multi-LLM AI validators reach consensus on disputes - fair, fast, and
@@ -70,17 +70,17 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mb-12 flex flex-col items-stretch justify-center gap-3 sm:mb-14 sm:flex-row sm:items-center sm:gap-4"
           >
             <button
               onClick={() => onNavigate('submit')}
-              className="rounded-xl bg-white px-8 py-4 font-semibold text-black transition-all hover:scale-[1.02] hover:bg-zinc-200"
+              className="w-full rounded-xl bg-white px-8 py-4 font-semibold text-black transition-all hover:scale-[1.02] hover:bg-zinc-200 sm:w-auto"
             >
               Submit a Dispute
             </button>
             <button
               onClick={() => onNavigate('dashboard')}
-              className="rounded-xl border border-zinc-700 bg-zinc-900 px-8 py-4 font-semibold text-white transition-all hover:border-zinc-500 hover:bg-zinc-800"
+              className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-8 py-4 font-semibold text-white transition-all hover:border-zinc-500 hover:bg-zinc-800 sm:w-auto"
             >
               View Dashboard
             </button>
@@ -91,7 +91,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mx-auto grid max-w-4xl grid-cols-2 gap-6 md:grid-cols-4"
+            className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4"
           >
             {[
               { icon: Scale, value: '47', label: 'Disputes Resolved' },
@@ -101,11 +101,11 @@ export default function Hero({ onNavigate }: HeroProps) {
             ].map((stat, index) => (
               <div
                 key={index}
-                className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-6 backdrop-blur-sm transition-colors hover:border-zinc-500"
+                className="rounded-2xl border border-zinc-800 bg-zinc-950/75 p-4 backdrop-blur-sm transition-colors hover:border-zinc-500 sm:p-6"
               >
-                <stat.icon className="mx-auto mb-3 w-8 h-8 text-zinc-300" />
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-zinc-300">{stat.label}</div>
+                <stat.icon className="mx-auto mb-2 h-8 w-8 text-zinc-100 sm:mb-3" />
+                <div className="mb-1 text-2xl font-bold text-white sm:text-3xl">{stat.value}</div>
+                <div className="text-xs text-zinc-200 sm:text-sm">{stat.label}</div>
               </div>
             ))}
           </motion.div>

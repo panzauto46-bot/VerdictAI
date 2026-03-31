@@ -34,16 +34,16 @@ export default function LiveDemo() {
   }, [step, isRunning, steps.length]);
 
   return (
-    <section id="demo" className="relative z-10 py-24 bg-black/36">
+    <section id="demo" className="relative z-10 bg-black/40 py-16 sm:py-20 lg:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-10 sm:mb-12"
         >
-          <h2 className="text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
-          <p className="text-lg text-zinc-300">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
+          <p className="text-base sm:text-lg text-zinc-200">
             Watch how multiple AI validators independently analyze and reach consensus
           </p>
         </motion.div>
@@ -52,10 +52,10 @@ export default function LiveDemo() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-sm"
+          className="rounded-2xl border border-zinc-800 bg-zinc-950/75 p-4 sm:p-6 lg:p-8 backdrop-blur-sm"
         >
           {/* Demo Visualization */}
-          <div className="relative h-64 mb-8">
+          <div className="relative h-56 sm:h-64 mb-8">
             {/* Center Node */}
             <div className="absolute top-1/2 left-1/2 z-10 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-white shadow-lg shadow-white/10">
               <Zap className="h-10 w-10 text-black" />
@@ -140,14 +140,14 @@ export default function LiveDemo() {
           </div>
 
           {/* Progress Steps */}
-          <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
             <AnimatePresence mode="wait">
               {steps.slice(0, step + 1).map((currentStep, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs sm:text-sm ${
                     i === step ? 'border border-zinc-200 bg-white/10' : 'bg-zinc-900/70'
                   }`}
                 >
@@ -168,7 +168,7 @@ export default function LiveDemo() {
               >
                 <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-white" />
                 <div className="font-semibold text-white">Consensus: Party A wins (87% confidence)</div>
-                <div className="text-sm text-zinc-300">5/5 validators agreed | Auto-enforcement triggered</div>
+                <div className="text-sm text-zinc-200">5/5 validators agreed | Auto-enforcement triggered</div>
               </motion.div>
             )}
           </AnimatePresence>

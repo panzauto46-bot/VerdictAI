@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import {
+  Copy,
   AlertTriangle,
   ArrowLeft,
   Brain,
@@ -9,6 +10,7 @@ import {
   ExternalLink,
   FileText,
   Flame,
+  Loader2,
   MessageSquareReply,
   ReceiptText,
   Upload,
@@ -16,6 +18,7 @@ import {
 } from 'lucide-react';
 import {
   type Dispute,
+  type DisputeTransaction,
   type DisputeResponseInput,
   type EvidenceReference,
   categoryLabels,
@@ -42,6 +45,18 @@ interface DisputeDetailProps {
   isAppealing: boolean;
   walletAddress: string | null;
 }
+
+const receiptStatusTone: Record<DisputeTransaction['status'], string> = {
+  pending: 'bg-zinc-900 text-zinc-200 border border-zinc-700',
+  success: 'bg-white/10 text-zinc-100 border border-zinc-700',
+  error: 'bg-zinc-950 text-zinc-300 border border-zinc-700',
+};
+
+const receiptStatusLabel: Record<DisputeTransaction['status'], string> = {
+  pending: 'Pending',
+  success: 'Success',
+  error: 'Error',
+};
 
 export default function DisputeDetail({
   dispute,
@@ -73,6 +88,7 @@ export default function DisputeDetail({
   const [uploadedEvidence, setUploadedEvidence] = useState<EvidenceReference | null>(null);
   const [isUploadingEvidence, setIsUploadingEvidence] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [copiedTransactionId, setCopiedTransactionId] = useState<string | null>(null);
 
   useEffect(() => {
     setResponseForm({
@@ -425,11 +441,49 @@ export default function DisputeDetail({
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-1">
                         <span className="text-white font-medium">{transaction.label}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-xs capitalize ${transaction.status === 'success' ? 'bg-white/5 text-zinc-100' : 'bg-zinc-900 text-zinc-300'}`}>{transaction.status}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs ${receiptStatusTone[transaction.status]}`}>
+                          <span className="inline-flex items-center gap-1">
+                            {transaction.status === 'pending' && <Loader2 className="h-3 w-3 animate-spin" />}
+                            {receiptStatusLabel[transaction.status]}
+                          </span>
+                        </span>
                         <span className="px-2 py-0.5 rounded-full text-xs bg-slate-800 text-slate-300 capitalize">{transaction.mode}</span>
                       </div>
                       <div className="text-sm text-slate-400">{transaction.message}</div>
-                      {transaction.txHash && <div className="mt-2 break-all text-xs text-slate-500">{transaction.txHash}</div>}
+                      {transaction.txHash && (
+                        <>
+                          <div className="mt-2 break-all text-xs text-slate-500">{transaction.txHash}</div>
+                          <div className="mt-2 flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                try {
+                                  await navigator.clipboard.writeText(transaction.txHash);
+                                  setCopiedTransactionId(transaction.id);
+                                  window.setTimeout(() => setCopiedTransactionId(null), 1400);
+                                } catch {
+                                  setCopiedTransactionId(null);
+                                }
+                              }}
+                              className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-200 transition-colors hover:bg-zinc-800"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                              {copiedTransactionId === transaction.id ? 'Copied' : 'Copy tx hash'}
+                            </button>
+                            {transaction.explorerUrl && (
+                              <a
+                                href={transaction.explorerUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-200 transition-colors hover:bg-zinc-800"
+                              >
+                                Explorer
+                                <ExternalLink className="h-3.5 w-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        </>
+                      )}
                     </div>
                     <div className="text-sm text-slate-500">{new Date(transaction.createdAt).toLocaleString()}</div>
                   </div>

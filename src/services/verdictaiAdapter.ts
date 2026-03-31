@@ -269,8 +269,17 @@ async function attemptContractWrite(
 export async function submitDisputeAction(
   disputeId: string,
   input: NewDisputeInput,
-  walletAddress: string | null
+  walletAddress: string | null,
+  options?: { forceDemo?: boolean }
 ): Promise<ActionReceipt> {
+  if (options?.forceDemo) {
+    return simulateAction(
+      `${disputeId}-demo`,
+      'Dispute submitted in demo mode fallback (no on-chain write).',
+      'demo'
+    );
+  }
+
   const stakeWei = parseEther(input.stakeAmount.toFixed(6));
   const args = [
     input.category,

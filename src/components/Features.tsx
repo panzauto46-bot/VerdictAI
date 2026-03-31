@@ -74,23 +74,23 @@ export default function Features() {
   ];
 
   return (
-    <section id="features" className="relative z-10 py-24 bg-black/34">
+    <section id="features" className="relative z-10 bg-black/38 py-16 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Benefits */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-14 lg:mb-16"
         >
-          <h2 className="text-4xl font-bold text-white mb-4">Why VerdictAI?</h2>
-          <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Why VerdictAI?</h2>
+          <p className="text-base sm:text-lg text-zinc-200 max-w-2xl mx-auto">
             The only dispute resolution where AI consensus makes the decision -
             not gameable by token whales, not biased by emotions.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 mb-16 sm:mb-20 lg:mb-24">
           {benefits.map((benefit, index) => (
             <motion.div
               key={index}
@@ -98,13 +98,13 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="rounded-2xl border border-zinc-800 bg-black/70 p-6 transition-all group hover:border-zinc-500"
+              className="rounded-2xl border border-zinc-800 bg-black/72 p-5 sm:p-6 transition-all group hover:border-zinc-500"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 transition-colors group-hover:bg-zinc-800">
                 <benefit.icon className="h-6 w-6 text-zinc-200" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">{benefit.title}</h3>
-              <p className="text-zinc-300 text-sm">{benefit.description}</p>
+              <p className="text-zinc-200 text-sm">{benefit.description}</p>
             </motion.div>
           ))}
         </div>
@@ -114,13 +114,13 @@ export default function Features() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-10 sm:mb-12"
         >
           <h2 className="text-3xl font-bold text-white mb-4">Dispute Categories</h2>
-          <p className="text-zinc-300">Pre-built templates for common Web3 dispute scenarios</p>
+          <p className="text-zinc-200">Pre-built templates for common Web3 dispute scenarios</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((category, index) => (
             <motion.div
               key={index}
@@ -128,11 +128,11 @@ export default function Features() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`cursor-pointer rounded-xl border p-6 transition-transform hover:scale-105 ${category.color}`}
+              className={`cursor-pointer rounded-xl border p-5 sm:p-6 transition-transform hover:scale-[1.03] ${category.color}`}
             >
               <category.icon className="w-10 h-10 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-1">{category.title}</h3>
-              <p className="text-sm text-zinc-300">{category.description}</p>
+              <p className="text-sm text-zinc-200">{category.description}</p>
             </motion.div>
           ))}
         </div>
@@ -142,9 +142,9 @@ export default function Features() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-24"
+          className="mt-16 sm:mt-20 lg:mt-24"
         >
-          <h2 className="text-3xl font-bold text-white text-center mb-12">VerdictAI vs Competition</h2>
+          <h2 className="text-3xl font-bold text-white text-center mb-10 sm:mb-12">VerdictAI vs Competition</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>

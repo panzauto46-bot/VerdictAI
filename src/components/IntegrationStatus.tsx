@@ -16,9 +16,9 @@ const iconMap: Record<ReadinessItem['id'], typeof Wallet> = {
 };
 
 const toneMap: Record<ReadinessItem['level'], string> = {
-  ready: 'border-zinc-600 bg-white/10 text-zinc-100',
-  attention: 'border-zinc-700 bg-zinc-900 text-zinc-200',
-  missing: 'border-zinc-800 bg-zinc-950 text-zinc-400',
+  ready: 'border-zinc-600 bg-white/12 text-zinc-100',
+  attention: 'border-zinc-700 bg-zinc-900/95 text-zinc-100',
+  missing: 'border-zinc-800 bg-zinc-950 text-zinc-300',
 };
 
 export default function IntegrationStatus({ walletAddress, compact = false }: IntegrationStatusProps) {
@@ -36,12 +36,12 @@ export default function IntegrationStatus({ walletAddress, compact = false }: In
             )}
             <h2 className="text-lg font-semibold text-white">Integration Readiness</h2>
           </div>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-zinc-300">
             {snapshot.readyCount}/{snapshot.items.length} core integration layers are configured for live demo usage.
           </p>
         </div>
         {snapshot.unresolved.length > 0 && (
-          <div className="rounded-xl border border-zinc-800 bg-black/60 px-4 py-3 text-sm text-zinc-300">
+          <div className="rounded-xl border border-zinc-800 bg-black/70 px-4 py-3 text-sm text-zinc-200">
             Next unblocker: {snapshot.unresolved[0]}
           </div>
         )}
@@ -58,10 +58,10 @@ export default function IntegrationStatus({ walletAddress, compact = false }: In
                 </div>
                 <div>
                   <div className="font-medium">{item.label}</div>
-                  <div className="text-sm opacity-80">{item.summary}</div>
+                  <div className="text-sm text-zinc-300">{item.summary}</div>
                 </div>
               </div>
-              <p className="text-sm opacity-80">{item.detail}</p>
+              <p className="text-sm text-zinc-200">{item.detail}</p>
             </div>
           );
         })}

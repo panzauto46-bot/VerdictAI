@@ -113,6 +113,7 @@ export interface Dispute {
 
 export interface NewDisputeInput {
   id?: string;
+  preferredMode?: 'auto' | 'demo';
   category: DisputeCategory;
   title: string;
   description: string;

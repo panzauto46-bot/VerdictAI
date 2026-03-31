@@ -36,17 +36,17 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="relative z-10 py-24 bg-black/38">
+    <section id="how-it-works" className="relative z-10 bg-black/42 py-16 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-12 text-center sm:mb-14 lg:mb-16"
         >
-          <h2 className="text-4xl font-bold text-white mb-4">How VerdictAI Works</h2>
-          <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
+          <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">How VerdictAI Works</h2>
+          <p className="mx-auto max-w-2xl text-base text-zinc-200 sm:text-lg">
             A 6-step dispute lifecycle powered by GenLayer's decentralized AI consensus
           </p>
         </motion.div>
@@ -59,7 +59,7 @@ export default function HowItWorks() {
             style={{ transform: 'translateY(-50%)' }}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {steps.map((step, index) => (
               <motion.div
                 key={index}
@@ -69,20 +69,20 @@ export default function HowItWorks() {
                 transition={{ delay: index * 0.1 }}
                 className="relative"
               >
-                <div className="bg-zinc-950/70 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800 hover:border-zinc-500 transition-all group h-full">
+                <div className="group h-full rounded-2xl border border-zinc-800 bg-zinc-950/75 p-5 backdrop-blur-sm transition-all hover:border-zinc-500 sm:p-6">
                   {/* Step Number */}
                   <div className="absolute -top-3 -left-3 w-8 h-8 bg-black border-2 border-zinc-600 rounded-full flex items-center justify-center text-sm font-bold text-zinc-200">
                     {index + 1}
                   </div>
 
                   {/* Icon */}
-                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <step.icon className="w-7 h-7 text-black" />
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white transition-transform group-hover:scale-110">
+                    <step.icon className="h-7 w-7 text-black" />
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-zinc-300 text-sm leading-relaxed">{step.description}</p>
+                  <h3 className="mb-2 text-xl font-semibold text-white">{step.title}</h3>
+                  <p className="text-sm leading-relaxed text-zinc-200">{step.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -94,10 +94,10 @@ export default function HowItWorks() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-20"
+          className="mt-14 sm:mt-16 lg:mt-20"
         >
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-8">
-            <h3 className="text-xl font-semibold text-white text-center mb-8">System Architecture</h3>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5 sm:p-7 lg:p-8">
+            <h3 className="mb-8 text-center text-xl font-semibold text-white">System Architecture</h3>
             <div className="flex flex-col items-center gap-4">
               {/* User */}
               <div className="rounded-lg border border-zinc-600 bg-zinc-900 px-6 py-3 font-medium text-zinc-100">
@@ -119,7 +119,7 @@ export default function HowItWorks() {
                   </div>
                 ))}
               </div>
-              <div className="text-zinc-300 text-sm">Validators (Independent Analysis)</div>
+              <div className="text-zinc-200 text-sm">Validators (Independent Analysis)</div>
               <div className="w-0.5 h-8 bg-zinc-700" />
 
               {/* Consensus */}

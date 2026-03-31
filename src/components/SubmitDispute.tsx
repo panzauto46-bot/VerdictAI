@@ -11,6 +11,7 @@ import {
   TrendingUp,
   HelpCircle,
   ExternalLink,
+  Copy,
 } from 'lucide-react';
 import { Dispute, DisputeCategory, EvidenceReference, NewDisputeInput } from '../types/dispute';
 import { getEvidenceUrl } from '../utils/evidence';
@@ -29,6 +30,14 @@ interface SubmitDisputeProps {
 
 function isValidEvmAddress(address: string): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
+}
+
+function isInsufficientBalanceError(message: string | null): boolean {
+  if (!message) {
+    return false;
+  }
+
+  return /insufficient|saldo|balance/i.test(message);
 }
 
 export default function SubmitDispute({
@@ -57,6 +66,7 @@ export default function SubmitDispute({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedDispute, setSubmittedDispute] = useState<Dispute | null>(null);
+  const [copiedReceiptHash, setCopiedReceiptHash] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -173,7 +183,7 @@ export default function SubmitDispute({
     setFormData({ ...formData, evidenceHash: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (modePreference: 'auto' | 'demo' = 'auto') => {
     if (!category) {
       return;
     }
@@ -210,6 +220,7 @@ export default function SubmitDispute({
         : undefined;
 
       const createdDispute = await onCreateDispute({
+        preferredMode: modePreference,
         category,
         title: formData.title,
         description: formData.description,
@@ -231,6 +242,8 @@ export default function SubmitDispute({
   };
 
   if (submittedDispute) {
+    const canOpenExplorer = Boolean(latestReceipt?.explorerUrl && latestReceipt.txHash);
+
     return (
       <section className="min-h-screen bg-black pt-24 pb-16 flex items-center justify-center">
         <motion.div
@@ -259,6 +272,39 @@ export default function SubmitDispute({
                   Mode: <span className="text-zinc-200 capitalize">{latestReceipt.mode}</span>
                 </div>
                 <div className="text-xs text-zinc-500 mt-1 break-all">{latestReceipt.txHash}</div>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!latestReceipt.txHash) {
+                        return;
+                      }
+
+                      try {
+                        await navigator.clipboard.writeText(latestReceipt.txHash);
+                        setCopiedReceiptHash(true);
+                        window.setTimeout(() => setCopiedReceiptHash(false), 1500);
+                      } catch {
+                        setCopiedReceiptHash(false);
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-200 transition-colors hover:bg-zinc-800"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {copiedReceiptHash ? 'Copied' : 'Copy tx hash'}
+                  </button>
+                  {canOpenExplorer && (
+                    <a
+                      href={latestReceipt?.explorerUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-200 transition-colors hover:bg-zinc-800"
+                    >
+                      Explorer
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -282,7 +328,7 @@ export default function SubmitDispute({
   }
 
   return (
-    <section className="min-h-screen bg-black pt-24 pb-16">
+    <section className="min-h-screen bg-black pb-16 pt-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -308,7 +354,7 @@ export default function SubmitDispute({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex items-center justify-center gap-4 mb-8"
+          className="mb-8 flex items-center justify-center gap-3 sm:gap-4"
         >
           {[1, 2, 3].map((progressStep) => (
             <div key={progressStep} className="flex items-center gap-2">
@@ -322,7 +368,7 @@ export default function SubmitDispute({
                 {progressStep < step ? <CheckCircle2 className="w-4 h-4" /> : progressStep}
               </div>
               {progressStep < 3 && (
-                <div className={`w-12 h-0.5 ${progressStep < step ? 'bg-zinc-200' : 'bg-zinc-900'}`} />
+                <div className={`w-8 sm:w-12 h-0.5 ${progressStep < step ? 'bg-zinc-200' : 'bg-zinc-900'}`} />
               )}
             </div>
           ))}
@@ -627,7 +673,16 @@ export default function SubmitDispute({
 
                 {submitError && (
                   <div className="rounded-xl border border-zinc-600 bg-white/5 p-4 text-sm text-zinc-200">
-                    {submitError}
+                    <p>{submitError}</p>
+                    {isInsufficientBalanceError(submitError) && walletAddress && !isSubmitting && (
+                      <button
+                        type="button"
+                        onClick={() => void handleSubmit('demo')}
+                        className="mt-3 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-100 transition-colors hover:bg-zinc-800"
+                      >
+                        Continue in Demo Mode
+                      </button>
+                    )}
                   </div>
                 )}
 
@@ -638,10 +693,10 @@ export default function SubmitDispute({
                 )}
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <button
                   onClick={() => setStep(2)}
-                  className="flex-1 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg transition-all"
+                  className="w-full sm:flex-1 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg transition-all"
                 >
                   Back
                 </button>
@@ -655,7 +710,7 @@ export default function SubmitDispute({
                     Boolean(step3ValidationMessage) ||
                     isSubmitting
                   }
-                  className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -666,6 +721,16 @@ export default function SubmitDispute({
                     'Submit Dispute'
                   )}
                 </button>
+                {walletAddress && (
+                  <button
+                    type="button"
+                    onClick={() => void handleSubmit('demo')}
+                    disabled={Boolean(step3ValidationMessage) || isSubmitting}
+                    className="w-full sm:flex-1 px-6 py-3 rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-100 font-medium transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Submit in Demo Mode
+                  </button>
+                )}
               </div>
             </>
           )}
