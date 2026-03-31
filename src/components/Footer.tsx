@@ -12,7 +12,7 @@ export default function Footer() {
                 <Scale className="w-5 h-5 text-black" />
               </div>
               <span className="text-xl font-bold text-white">
-                Verdict<span className="text-zinc-400">AI</span>
+                Verdict<span className="text-zinc-300">AI</span>
               </span>
             </div>
             <p className="text-zinc-300 text-sm max-w-sm mb-4">
@@ -55,9 +55,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-zinc-400 text-sm">(c) 2026 VerdictAI. Built for GenLayer Bradbury Hackathon.</p>
+          <p className="text-zinc-300 text-sm">(c) 2026 VerdictAI. Built for GenLayer Bradbury Hackathon.</p>
           <div className="flex items-center gap-2">
-            <span className="text-zinc-400 text-sm">Powered by</span>
+            <span className="text-zinc-300 text-sm">Powered by</span>
             <span className="rounded-full border border-zinc-700 px-3 py-1 bg-zinc-900 text-zinc-200 text-sm font-medium">
               GenLayer
             </span>

@@ -138,3 +138,14 @@ html {
   opacity: 0.14;
   mix-blend-mode: normal;
 }
+
+.app-shell.theme-light .landing-shell #how-it-works,
+.app-shell.theme-light .landing-shell #demo,
+.app-shell.theme-light .landing-shell #features {
+  background: transparent !important;
+}
+
+.app-shell.theme-light .landing-shell footer {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}

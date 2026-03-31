@@ -119,7 +119,7 @@ export default function HowItWorks() {
                   </div>
                 ))}
               </div>
-              <div className="text-zinc-400 text-sm">Validators (Independent Analysis)</div>
+              <div className="text-zinc-300 text-sm">Validators (Independent Analysis)</div>
               <div className="w-0.5 h-8 bg-zinc-700" />
 
               {/* Consensus */}

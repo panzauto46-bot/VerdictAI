@@ -98,7 +98,7 @@ export default function LiveDemo() {
                           ? 'text-white'
                           : isActive
                             ? 'text-zinc-200 animate-pulse'
-                            : 'text-zinc-500'
+                            : 'text-zinc-300'
                       }`}
                     />
                   </div>
