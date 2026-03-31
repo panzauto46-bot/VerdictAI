@@ -46,7 +46,7 @@ export default function HowItWorks() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4">How VerdictAI Works</h2>
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
             A 6-step dispute lifecycle powered by GenLayer's decentralized AI consensus
           </p>
         </motion.div>
@@ -82,7 +82,7 @@ export default function HowItWorks() {
 
                   {/* Content */}
                   <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{step.description}</p>
+                  <p className="text-zinc-300 text-sm leading-relaxed">{step.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -119,7 +119,7 @@ export default function HowItWorks() {
                   </div>
                 ))}
               </div>
-              <div className="text-zinc-500 text-sm">Validators (Independent Analysis)</div>
+              <div className="text-zinc-400 text-sm">Validators (Independent Analysis)</div>
               <div className="w-0.5 h-8 bg-zinc-700" />
 
               {/* Consensus */}

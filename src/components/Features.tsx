@@ -84,7 +84,7 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-white mb-4">Why VerdictAI?</h2>
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
             The only dispute resolution where AI consensus makes the decision -
             not gameable by token whales, not biased by emotions.
           </p>
@@ -104,7 +104,7 @@ export default function Features() {
                 <benefit.icon className="h-6 w-6 text-zinc-200" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">{benefit.title}</h3>
-              <p className="text-zinc-400 text-sm">{benefit.description}</p>
+              <p className="text-zinc-300 text-sm">{benefit.description}</p>
             </motion.div>
           ))}
         </div>
@@ -117,7 +117,7 @@ export default function Features() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl font-bold text-white mb-4">Dispute Categories</h2>
-          <p className="text-zinc-400">Pre-built templates for common Web3 dispute scenarios</p>
+          <p className="text-zinc-300">Pre-built templates for common Web3 dispute scenarios</p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -132,7 +132,7 @@ export default function Features() {
             >
               <category.icon className="w-10 h-10 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-1">{category.title}</h3>
-              <p className="text-sm text-zinc-400">{category.description}</p>
+              <p className="text-sm text-zinc-300">{category.description}</p>
             </motion.div>
           ))}
         </div>
@@ -149,34 +149,34 @@ export default function Features() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-zinc-700">
-                  <th className="text-left py-4 px-4 text-zinc-400 font-medium">Solution</th>
-                  <th className="text-center py-4 px-4 text-zinc-400 font-medium">Speed</th>
-                  <th className="text-center py-4 px-4 text-zinc-400 font-medium">Cost</th>
-                  <th className="text-center py-4 px-4 text-zinc-400 font-medium">Enforcement</th>
-                  <th className="text-center py-4 px-4 text-zinc-400 font-medium">Decision Maker</th>
+                  <th className="text-left py-4 px-4 text-zinc-300 font-medium">Solution</th>
+                  <th className="text-center py-4 px-4 text-zinc-300 font-medium">Speed</th>
+                  <th className="text-center py-4 px-4 text-zinc-300 font-medium">Cost</th>
+                  <th className="text-center py-4 px-4 text-zinc-300 font-medium">Enforcement</th>
+                  <th className="text-center py-4 px-4 text-zinc-300 font-medium">Decision Maker</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-zinc-800">
-                  <td className="py-4 px-4 text-zinc-300">Traditional Arbitration</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Weeks-Months</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">$1K-$50K+</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Off-chain</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">Centralized</td>
+                  <td className="py-4 px-4 text-zinc-200">Traditional Arbitration</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Weeks-Months</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">$1K-$50K+</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Off-chain</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Centralized</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
-                  <td className="py-4 px-4 text-zinc-300">Kleros</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Days</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">$50-$500</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Token-based</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">Human Jurors</td>
+                  <td className="py-4 px-4 text-zinc-200">Kleros</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Days</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">$50-$500</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Token-based</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Human Jurors</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
-                  <td className="py-4 px-4 text-zinc-300">Aragon Court</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Days</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">$100-$1K</td>
-                  <td className="text-center py-4 px-4 text-zinc-400">Token-based</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">Human Jurors</td>
+                  <td className="py-4 px-4 text-zinc-200">Aragon Court</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Days</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">$100-$1K</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Token-based</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Human Jurors</td>
                 </tr>
                 <tr className="rounded-lg bg-white/10">
                   <td className="py-4 px-4 text-white font-semibold">VerdictAI</td>

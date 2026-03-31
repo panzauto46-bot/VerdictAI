@@ -58,7 +58,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto mb-12 max-w-3xl text-xl text-zinc-400"
+            className="mx-auto mb-12 max-w-3xl text-xl text-zinc-300"
           >
             VerdictAI is a decentralized dispute resolution protocol powered by GenLayer's Intelligent
             Contracts. Multi-LLM AI validators reach consensus on disputes - fair, fast, and
@@ -105,7 +105,7 @@ export default function Hero({ onNavigate }: HeroProps) {
               >
                 <stat.icon className="mx-auto mb-3 w-8 h-8 text-zinc-300" />
                 <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-zinc-400">{stat.label}</div>
+                <div className="text-sm text-zinc-300">{stat.label}</div>
               </div>
             ))}
           </motion.div>

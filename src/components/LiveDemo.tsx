@@ -43,7 +43,7 @@ export default function LiveDemo() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
-          <p className="text-lg text-zinc-400">
+          <p className="text-lg text-zinc-300">
             Watch how multiple AI validators independently analyze and reach consensus
           </p>
         </motion.div>
@@ -104,7 +104,7 @@ export default function LiveDemo() {
                   </div>
                   <div className="text-center mt-2">
                     <span
-                      className={`text-xs ${isComplete ? 'text-white' : isActive ? 'text-zinc-200' : 'text-zinc-500'}`}
+                      className={`text-xs ${isComplete ? 'text-white' : isActive ? 'text-zinc-200' : 'text-zinc-300'}`}
                     >
                       LLM-{String.fromCharCode(65 + i)}
                     </span>
@@ -168,7 +168,7 @@ export default function LiveDemo() {
               >
                 <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-white" />
                 <div className="font-semibold text-white">Consensus: Party A wins (87% confidence)</div>
-                <div className="text-sm text-zinc-400">5/5 validators agreed | Auto-enforcement triggered</div>
+                <div className="text-sm text-zinc-300">5/5 validators agreed | Auto-enforcement triggered</div>
               </motion.div>
             )}
           </AnimatePresence>

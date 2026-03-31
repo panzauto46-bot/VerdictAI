@@ -135,5 +135,6 @@ html {
 }
 
 .app-shell.theme-light .landing-particle-field {
-  opacity: 0.48;
+  opacity: 0.14;
+  mix-blend-mode: normal;
 }
