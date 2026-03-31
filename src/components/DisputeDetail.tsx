@@ -165,7 +165,7 @@ export default function DisputeDetail({
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <span className="text-violet-400 font-mono">{dispute.id}</span>
+                <span className="text-zinc-200 font-mono">{dispute.id}</span>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[dispute.status]}`}>
                   {statusLabels[dispute.status]}
                 </span>
@@ -188,13 +188,13 @@ export default function DisputeDetail({
           <h2 className="text-lg font-semibold text-white mb-6">Dispute Progress</h2>
           <div className="flex items-center justify-between relative">
             <div className="absolute top-5 left-0 right-0 h-0.5 bg-slate-700" />
-            <div className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-violet-500 to-indigo-500 transition-all duration-500" style={{ width: `${((progressStep - 1) / 4) * 100}%` }} />
+            <div className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-zinc-300 to-zinc-100 transition-all duration-500" style={{ width: `${((progressStep - 1) / 4) * 100}%` }} />
             {['Open', 'Response', 'AI Review', 'Verdict', 'Enforced'].map((stepLabel, index) => (
               <div key={stepLabel} className="relative z-10 flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${index + 1 <= progressStep ? 'bg-gradient-to-br from-violet-500 to-indigo-600' : 'bg-slate-800 border-2 border-slate-700'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${index + 1 <= progressStep ? 'bg-gradient-to-br from-zinc-200 to-white' : 'bg-slate-800 border-2 border-slate-700'}`}>
                   {index + 1 < progressStep ? <CheckCircle2 className="w-5 h-5 text-white" /> : <span className={`text-sm font-medium ${index + 1 <= progressStep ? 'text-white' : 'text-slate-500'}`}>{index + 1}</span>}
                 </div>
-                <span className={`mt-2 text-xs ${index + 1 <= progressStep ? 'text-violet-400' : 'text-slate-500'}`}>{stepLabel}</span>
+                <span className={`mt-2 text-xs ${index + 1 <= progressStep ? 'text-zinc-200' : 'text-slate-500'}`}>{stepLabel}</span>
               </div>
             ))}
           </div>
@@ -213,8 +213,8 @@ export default function DisputeDetail({
               className="bg-slate-900/50 rounded-2xl border border-slate-800 p-6"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${entry.tone === 'blue' ? 'bg-blue-500/20' : 'bg-pink-500/20'}`}>
-                  <User className={`w-5 h-5 ${entry.tone === 'blue' ? 'text-blue-400' : 'text-pink-400'}`} />
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${entry.tone === 'blue' ? 'bg-zinc-900' : 'bg-zinc-900'}`}>
+                  <User className={`w-5 h-5 ${entry.tone === 'blue' ? 'text-zinc-200' : 'text-zinc-200'}`} />
                 </div>
                 <div>
                   <div className="text-sm text-slate-400">{entry.label}</div>
@@ -223,7 +223,7 @@ export default function DisputeDetail({
               </div>
               <div className="mb-4">
                 <div className="text-sm text-slate-400 mb-1">Wallet Address</div>
-                <code className="text-violet-400 text-sm">{shortenAddress(entry.party.address)}</code>
+                <code className="text-zinc-200 text-sm">{shortenAddress(entry.party.address)}</code>
               </div>
               <div className="mb-4">
                 <div className="text-sm text-slate-400 mb-1">{entry.label.startsWith('Party A') ? 'Claim Statement' : 'Counter Statement'}</div>
@@ -234,7 +234,7 @@ export default function DisputeDetail({
                   <FileText className="w-4 h-4 text-slate-400" />
                   <span className="text-slate-400">Evidence:</span>
                   {entry.evidenceUrl ? (
-                    <a href={entry.evidenceUrl} target="_blank" rel="noreferrer" className="text-violet-400 hover:underline flex items-center gap-1">
+                    <a href={entry.evidenceUrl} target="_blank" rel="noreferrer" className="text-zinc-200 hover:underline flex items-center gap-1">
                       {entry.party.evidence?.fileName ?? entry.party.evidenceHash}
                       <ExternalLink className="w-3 h-3" />
                     </a>
@@ -254,8 +254,8 @@ export default function DisputeDetail({
         {showRespondForm && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6 bg-slate-900/50 rounded-2xl border border-slate-800 p-6">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center">
-                <MessageSquareReply className="w-6 h-6 text-yellow-400" />
+              <div className="w-12 h-12 bg-zinc-900/60 rounded-xl flex items-center justify-center">
+                <MessageSquareReply className="w-6 h-6 text-zinc-300" />
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-white">Respond to Dispute</h2>
@@ -265,17 +265,17 @@ export default function DisputeDetail({
 
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input type="text" value={responseForm.respondentName} onChange={(event) => setResponseForm({ ...responseForm, respondentName: event.target.value })} placeholder="Respondent name / handle" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500" />
+                <input type="text" value={responseForm.respondentName} onChange={(event) => setResponseForm({ ...responseForm, respondentName: event.target.value })} placeholder="Respondent name / handle" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-zinc-300" />
                 <input type="text" value={responseForm.respondentAddress} readOnly placeholder="Respondent wallet address" className="w-full px-4 py-3 bg-slate-800/70 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none font-mono cursor-not-allowed" />
               </div>
 
               {walletAddress && responseForm.respondentAddress && walletAddress.toLowerCase() !== responseForm.respondentAddress.toLowerCase() && (
-                <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+                <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 p-4 text-sm text-zinc-100">
                   The connected wallet does not match the designated respondent address for this dispute. On-chain response attempts will fail until the correct respondent wallet is connected.
                 </div>
               )}
 
-              <textarea value={responseForm.claim} onChange={(event) => setResponseForm({ ...responseForm, claim: event.target.value })} rows={4} placeholder="Provide the respondent version of events..." className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 resize-none" />
+              <textarea value={responseForm.claim} onChange={(event) => setResponseForm({ ...responseForm, claim: event.target.value })} rows={4} placeholder="Provide the respondent version of events..." className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-zinc-300 resize-none" />
 
               <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
                 <div>
@@ -288,22 +288,22 @@ export default function DisputeDetail({
                         setResponseForm({ ...responseForm, evidenceHash: event.target.value });
                       }}
                       placeholder="Qm... or https://..."
-                      className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono"
+                      className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-zinc-300 font-mono"
                     />
                     <input ref={responseFileInputRef} type="file" className="hidden" onChange={handleUploadEvidence} />
                     <button type="button" onClick={() => responseFileInputRef.current?.click()} disabled={isUploadingEvidence} className="px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50">
                       {isUploadingEvidence ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Upload className="w-5 h-5" />}
                     </button>
                   </div>
-                  {responseEvidenceUrl && <a href={responseEvidenceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm text-violet-400 hover:underline">Open prepared evidence<ExternalLink className="w-3 h-3" /></a>}
-                  {uploadError && <div className="mt-2 text-sm text-rose-300">{uploadError}</div>}
+                  {responseEvidenceUrl && <a href={responseEvidenceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm text-zinc-200 hover:underline">Open prepared evidence<ExternalLink className="w-3 h-3" /></a>}
+                  {uploadError && <div className="mt-2 text-sm text-zinc-300">{uploadError}</div>}
                 </div>
-                <input type="number" value={responseForm.stakeAmount} onChange={(event) => setResponseForm({ ...responseForm, stakeAmount: event.target.value })} placeholder="Respondent stake (ETH)" className="w-full sm:w-48 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500" />
+                <input type="number" value={responseForm.stakeAmount} onChange={(event) => setResponseForm({ ...responseForm, stakeAmount: event.target.value })} placeholder="Respondent stake (ETH)" className="w-full sm:w-48 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-zinc-300" />
               </div>
             </div>
 
             <div className="mt-6">
-              <button onClick={handleSubmitResponse} disabled={isSubmittingResponse || !responseForm.respondentName.trim() || !responseForm.respondentAddress.trim() || !responseForm.claim.trim() || !responseForm.stakeAmount.trim()} className="px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all flex items-center justify-center gap-2">
+              <button onClick={handleSubmitResponse} disabled={isSubmittingResponse || !responseForm.respondentName.trim() || !responseForm.respondentAddress.trim() || !responseForm.claim.trim() || !responseForm.stakeAmount.trim()} className="px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
                 {isSubmittingResponse ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Submitting response...</> : 'Submit Counter-Evidence'}
               </button>
             </div>
@@ -311,25 +311,25 @@ export default function DisputeDetail({
         )}
 
         {(dispute.status === 'open' || dispute.status === 'responding') && !showRespondForm && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6 bg-yellow-500/10 rounded-2xl border border-yellow-500/30 p-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6 bg-zinc-900/60 rounded-2xl border border-zinc-700 p-6">
             <div className="flex items-start gap-4">
-              <AlertTriangle className="w-6 h-6 text-yellow-400 shrink-0 mt-0.5" />
+              <AlertTriangle className="w-6 h-6 text-zinc-300 shrink-0 mt-0.5" />
               <div>
-                <h2 className="text-lg font-semibold text-yellow-200 mb-1">Awaiting Respondent Submission</h2>
-                <p className="text-sm text-yellow-100/80">Party B can submit a counter-claim and supporting evidence until {new Date(dispute.deadline).toLocaleString()}.</p>
+                <h2 className="text-lg font-semibold text-zinc-100 mb-1">Awaiting Respondent Submission</h2>
+                <p className="text-sm text-zinc-300">Party B can submit a counter-claim and supporting evidence until {new Date(dispute.deadline).toLocaleString()}.</p>
               </div>
             </div>
           </motion.div>
         )}
 
         {(dispute.status === 'reviewing' || dispute.status === 'appealed') && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6 bg-purple-900/20 rounded-2xl border border-purple-500/30 p-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6 bg-zinc-900/60 rounded-2xl border border-zinc-700 p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 relative">
-                  <div className="absolute inset-0 border-4 border-purple-500/30 rounded-full" />
-                  <div className="absolute inset-0 border-4 border-t-purple-500 rounded-full animate-spin" />
-                  <Brain className="w-8 h-8 text-purple-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  <div className="absolute inset-0 border-4 border-zinc-700 rounded-full" />
+                  <div className="absolute inset-0 border-4 border-t-zinc-300 rounded-full animate-spin" />
+                  <Brain className="w-8 h-8 text-zinc-200 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white mb-1">{dispute.status === 'appealed' ? 'Appeal Review in Progress' : 'AI Validators Processing'}</h2>
@@ -337,7 +337,7 @@ export default function DisputeDetail({
                 </div>
               </div>
               {dispute.status === 'reviewing' && !isProcessingVerdict && !dispute.verdict && (
-                <button onClick={() => void onRequestVerdict(dispute.id)} className="px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium rounded-lg transition-all">
+                <button onClick={() => void onRequestVerdict(dispute.id)} className="px-6 py-3 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg transition-all">
                   Finalize Demo Verdict
                 </button>
               )}
@@ -346,7 +346,7 @@ export default function DisputeDetail({
         )}
 
         {dispute.verdict && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-gradient-to-br from-violet-900/30 to-indigo-900/30 rounded-2xl border border-violet-500/30 p-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-zinc-950/70 rounded-2xl border border-zinc-700 p-6">
             <h2 className="text-xl font-bold text-white mb-4">AI Verdict</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-slate-900/50 rounded-xl p-4 text-center">
@@ -375,7 +375,7 @@ export default function DisputeDetail({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div className="bg-slate-900/50 rounded-xl p-4">
                 <div className="text-sm text-slate-400 mb-1">Party A Net Claim</div>
-                <div className="text-2xl font-bold text-emerald-400">{formatEth(partyAAmount)}</div>
+                <div className="text-2xl font-bold text-white">{formatEth(partyAAmount)}</div>
               </div>
               <div className="bg-slate-900/50 rounded-xl p-4">
                 <div className="text-sm text-slate-400 mb-1">Party B Net Claim</div>
@@ -414,7 +414,7 @@ export default function DisputeDetail({
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mt-6 bg-slate-900/50 rounded-2xl border border-slate-800 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <ReceiptText className="w-5 h-5 text-violet-400" />
+            <ReceiptText className="w-5 h-5 text-zinc-200" />
             <h2 className="text-lg font-semibold text-white">Action Receipts</h2>
           </div>
           <div className="space-y-3">
@@ -425,7 +425,7 @@ export default function DisputeDetail({
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-1">
                         <span className="text-white font-medium">{transaction.label}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-xs capitalize ${transaction.status === 'success' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'}`}>{transaction.status}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs capitalize ${transaction.status === 'success' ? 'bg-white/5 text-zinc-100' : 'bg-zinc-900 text-zinc-300'}`}>{transaction.status}</span>
                         <span className="px-2 py-0.5 rounded-full text-xs bg-slate-800 text-slate-300 capitalize">{transaction.mode}</span>
                       </div>
                       <div className="text-sm text-slate-400">{transaction.message}</div>
@@ -443,7 +443,7 @@ export default function DisputeDetail({
 
         {dispute.status === 'verdict' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 flex flex-col lg:flex-row gap-4">
-            <button onClick={() => void onClaimFunds(dispute.id)} disabled={isClaimingFunds} className="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-medium rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={() => void onClaimFunds(dispute.id)} disabled={isClaimingFunds} className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
               {isClaimingFunds ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Claiming...</> : <><Coins className="w-4 h-4" />Claim Funds</>}
             </button>
             <button onClick={() => void onAppeal(dispute.id)} disabled={dispute.appealUsed || isProcessingVerdict || isAppealing} className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all border border-slate-700 flex items-center justify-center gap-2">
@@ -453,12 +453,12 @@ export default function DisputeDetail({
         )}
 
         {dispute.status === 'enforced' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 rounded-2xl border border-zinc-700 bg-white/5 p-6">
             <div className="flex items-start gap-4">
-              <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5" />
               <div>
-                <h2 className="text-lg font-semibold text-emerald-200 mb-1">Enforcement Complete</h2>
-                <p className="text-sm text-emerald-100/80">The dispute has moved into the enforced state and the payout action has been recorded.</p>
+                <h2 className="text-lg font-semibold text-zinc-100 mb-1">Enforcement Complete</h2>
+                <p className="text-sm text-zinc-300">The dispute has moved into the enforced state and the payout action has been recorded.</p>
               </div>
             </div>
           </motion.div>
@@ -467,3 +467,4 @@ export default function DisputeDetail({
     </section>
   );
 }
+

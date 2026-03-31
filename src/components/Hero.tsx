@@ -7,20 +7,19 @@ interface HeroProps {
 
 export default function Hero({ onNavigate }: HeroProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
-      {/* Animated Background */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      {/* Monochrome Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/50 via-slate-950 to-indigo-950/50" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-black to-black" />
+        <div className="absolute top-[-120px] left-[-80px] h-[340px] w-[340px] rounded-full bg-white/8 blur-3xl animate-pulse" />
+        <div className="absolute bottom-[-120px] right-[-90px] h-[320px] w-[320px] rounded-full bg-white/6 blur-3xl animate-pulse delay-1000" />
       </div>
 
       {/* Grid Pattern */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-25"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.12'%3E%3Cpath d='M0 0h52v52H0z'/%3E%3C/g%3E%3C/svg%3E")`,
         }}
       />
 
@@ -32,9 +31,9 @@ export default function Hero({ onNavigate }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm font-medium mb-8">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              Built for GenLayer Bradbury Testnet
+            <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-200">
+              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+              Built for GenLayer Testnet
             </span>
           </motion.div>
 
@@ -43,11 +42,11 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
+            className="mb-6 text-5xl font-bold text-white md:text-7xl"
           >
             Trustless Disputes.
             <br />
-            <span className="bg-gradient-to-r from-violet-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-zinc-300 to-zinc-500 bg-clip-text text-transparent">
               AI Consensus.
             </span>
             <br />
@@ -59,7 +58,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-slate-400 max-w-3xl mx-auto mb-12"
+            className="mx-auto mb-12 max-w-3xl text-xl text-zinc-400"
           >
             VerdictAI is a decentralized dispute resolution protocol powered by GenLayer's Intelligent
             Contracts. Multi-LLM AI validators reach consensus on disputes - fair, fast, and
@@ -71,17 +70,17 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <button
               onClick={() => onNavigate('submit')}
-              className="px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105"
+              className="rounded-xl bg-white px-8 py-4 font-semibold text-black transition-all hover:scale-[1.02] hover:bg-zinc-200"
             >
               Submit a Dispute
             </button>
             <button
               onClick={() => onNavigate('dashboard')}
-              className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl transition-all border border-slate-700"
+              className="rounded-xl border border-zinc-700 bg-zinc-900 px-8 py-4 font-semibold text-white transition-all hover:border-zinc-500 hover:bg-zinc-800"
             >
               View Dashboard
             </button>
@@ -92,7 +91,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+            className="mx-auto grid max-w-4xl grid-cols-2 gap-6 md:grid-cols-4"
           >
             {[
               { icon: Scale, value: '47', label: 'Disputes Resolved' },
@@ -102,11 +101,11 @@ export default function Hero({ onNavigate }: HeroProps) {
             ].map((stat, index) => (
               <div
                 key={index}
-                className="p-6 bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 hover:border-violet-500/50 transition-colors"
+                className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-6 backdrop-blur-sm transition-colors hover:border-zinc-500"
               >
-                <stat.icon className="w-8 h-8 text-violet-400 mx-auto mb-3" />
+                <stat.icon className="mx-auto mb-3 w-8 h-8 text-zinc-300" />
                 <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+                <div className="text-sm text-zinc-400">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -120,11 +119,11 @@ export default function Hero({ onNavigate }: HeroProps) {
         transition={{ delay: 1 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
-        <div className="w-6 h-10 border-2 border-slate-600 rounded-full flex justify-center">
+        <div className="flex h-10 w-6 justify-center rounded-full border-2 border-zinc-600">
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1.5 h-3 bg-violet-400 rounded-full mt-2"
+            className="mt-2 h-3 w-1.5 rounded-full bg-white"
           />
         </div>
       </motion.div>

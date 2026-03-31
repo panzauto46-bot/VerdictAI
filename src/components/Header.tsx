@@ -56,7 +56,7 @@ export default function Header({
   const connectedWalletLabel = getWalletModeLabel(walletMode);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-black/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -64,11 +64,11 @@ export default function Header({
             onClick={() => onNavigate('home')}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/25">
-              <Scale className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-white/10">
+              <Scale className="w-5 h-5 text-black" />
             </div>
             <span className="text-xl font-bold text-white">
-              Verdict<span className="text-violet-400">AI</span>
+              Verdict<span className="text-zinc-400">AI</span>
             </span>
           </button>
 
@@ -80,8 +80,8 @@ export default function Header({
                 onClick={() => handleNavClick(item)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   currentPage === item.id
-                    ? 'bg-violet-600 text-white'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-300 hover:text-white hover:bg-zinc-900'
                 }`}
               >
                 {item.label}
@@ -95,7 +95,7 @@ export default function Header({
               <div className="flex items-center gap-2">
                 <div
                   title={walletMode === 'demo' ? 'Connected via demo wallet mode.' : `Connected through ${connectedWalletLabel}.`}
-                  className="px-4 py-2 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg"
+                  className="px-4 py-2 bg-zinc-900 border border-zinc-700 text-white text-sm font-medium rounded-lg"
                 >
                   {walletMode ? `${connectedWalletLabel} ` : ''}
                   {shortenAddress(walletAddress)}
@@ -104,7 +104,7 @@ export default function Header({
                   type="button"
                   onClick={onDisconnectWallet}
                   title="Disconnect Wallet"
-                  className="p-2 bg-slate-800 hover:bg-slate-700 hover:text-red-400 border border-slate-700 text-slate-400 rounded-lg transition-colors"
+                  className="p-2 bg-zinc-900 hover:bg-zinc-800 hover:text-white border border-zinc-700 text-zinc-400 rounded-lg transition-colors"
                 >
                   <LogOut className="w-5 h-5" />
                 </button>
@@ -115,17 +115,17 @@ export default function Header({
                   type="button"
                   onClick={() => setWalletPickerOpen((currentState) => !currentState)}
                   disabled={isConnectingWallet}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-violet-500/25"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg transition-all hover:bg-zinc-200 shadow-lg shadow-white/10"
                 >
                   {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
                   <ChevronDown className="h-4 w-4" />
                 </button>
 
                 {walletPickerOpen && (
-                  <div className="absolute right-0 top-[calc(100%+0.75rem)] z-[60] w-80 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-2xl">
+                  <div className="absolute right-0 top-[calc(100%+0.75rem)] z-[60] w-80 rounded-2xl border border-zinc-800 bg-black p-4 shadow-2xl">
                     <div className="mb-3">
                       <h2 className="text-sm font-semibold text-white">Choose Wallet</h2>
-                      <p className="mt-1 text-xs text-slate-400">
+                      <p className="mt-1 text-xs text-zinc-400">
                         Pick the wallet you want VerdictAI to use.
                       </p>
                     </div>
@@ -140,27 +140,27 @@ export default function Header({
                             setWalletPickerOpen(false);
                           }}
                           disabled={!option.available || isConnectingWallet}
-                          className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3 text-left transition-all hover:border-zinc-500 hover:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <div className="flex items-start gap-3">
-                            <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
+                            <div className="rounded-lg bg-zinc-800 p-2 text-zinc-200">
                               <Wallet className="h-4 w-4" />
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
                                 <div className="text-sm font-medium text-white">{option.label}</div>
-                                <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                                <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-white/10 text-zinc-200' : 'bg-zinc-800 text-zinc-400'}`}>
                                   {option.available ? 'Available' : 'Not detected'}
                                 </span>
                               </div>
-                              <p className="mt-1 text-xs text-slate-400">{option.description}</p>
+                              <p className="mt-1 text-xs text-zinc-400">{option.description}</p>
                             </div>
                           </div>
                         </button>
                       ))}
                     </div>
 
-                    <p className="mt-3 text-[11px] text-slate-500">
+                    <p className="mt-3 text-[11px] text-zinc-500">
                       MetaMask is recommended for GenLayer.
                     </p>
                   </div>
@@ -171,7 +171,7 @@ export default function Header({
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-slate-400 hover:text-white"
+            className="md:hidden p-2 text-zinc-400 hover:text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -180,7 +180,7 @@ export default function Header({
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-800">
+          <div className="md:hidden py-4 border-t border-zinc-800">
             <nav className="flex flex-col gap-2">
               {navItems.map((item) => (
                 <button
@@ -191,8 +191,8 @@ export default function Header({
                   }}
                   className={`px-4 py-3 rounded-lg text-sm font-medium text-left transition-all ${
                     currentPage === item.id
-                      ? 'bg-violet-600 text-white'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                      ? 'bg-white text-black'
+                      : 'text-zinc-300 hover:text-white hover:bg-zinc-900'
                   }`}
                 >
                   {item.label}
@@ -200,7 +200,7 @@ export default function Header({
               ))}
               {walletAddress ? (
                 <div className="flex items-center gap-2 mt-2">
-                  <div className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg">
+                  <div className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 text-white text-sm font-medium rounded-lg">
                     {walletMode === 'demo' ? 'Demo ' : ''}
                     {shortenAddress(walletAddress)}
                   </div>
@@ -211,7 +211,7 @@ export default function Header({
                       setMobileMenuOpen(false);
                     }}
                     title="Disconnect Wallet"
-                    className="p-3 bg-slate-800 hover:bg-slate-700 hover:text-red-400 border border-slate-700 text-slate-400 rounded-lg transition-colors"
+                    className="p-3 bg-zinc-900 hover:bg-zinc-800 hover:text-white border border-zinc-700 text-zinc-400 rounded-lg transition-colors"
                   >
                     <LogOut className="w-5 h-5" />
                   </button>
@@ -222,14 +222,14 @@ export default function Header({
                     type="button"
                     onClick={() => setWalletPickerOpen((currentState) => !currentState)}
                     disabled={isConnectingWallet}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium rounded-lg"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-white text-black text-sm font-semibold rounded-lg"
                   >
                     {isConnectingWallet ? 'Connecting...' : 'Connect Wallet'}
                     <ChevronDown className="h-4 w-4" />
                   </button>
 
                   {walletPickerOpen && (
-                    <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3">
+                    <div className="space-y-2 rounded-xl border border-zinc-800 bg-zinc-950/70 p-3">
                       {walletOptions.map((option) => (
                         <button
                           key={option.id}
@@ -240,11 +240,11 @@ export default function Header({
                             setMobileMenuOpen(false);
                           }}
                           disabled={!option.available || isConnectingWallet}
-                          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-3 text-left text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-left text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span>{option.label}</span>
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] ${option.available ? 'bg-white/10 text-zinc-200' : 'bg-zinc-800 text-zinc-400'}`}>
                               {option.available ? 'Available' : 'Not detected'}
                             </span>
                           </div>

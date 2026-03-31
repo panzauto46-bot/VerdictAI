@@ -183,46 +183,46 @@ export default function SubmitDispute({
 
   if (submittedDispute) {
     return (
-      <section className="min-h-screen bg-slate-950 pt-24 pb-16 flex items-center justify-center">
+      <section className="min-h-screen bg-black pt-24 pb-16 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-lg mx-auto text-center px-4"
         >
-          <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+          <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-4">Dispute Submitted!</h1>
-          <p className="text-slate-400 mb-8">
+          <p className="text-zinc-400 mb-8">
             Your dispute is now in the live VerdictAI flow. The respondent has 48 hours to submit their counter-evidence before AI review begins.
           </p>
-          <div className="bg-slate-900/50 rounded-xl p-4 mb-6 text-left">
-            <div className="text-sm text-slate-400 mb-1">Dispute ID</div>
-            <div className="text-violet-400 font-mono text-lg">{submittedDispute.id}</div>
-            <div className="mt-2 text-xs text-slate-500">
+          <div className="bg-zinc-950/70 rounded-xl p-4 mb-6 text-left">
+            <div className="text-sm text-zinc-400 mb-1">Dispute ID</div>
+            <div className="text-zinc-200 font-mono text-lg">{submittedDispute.id}</div>
+            <div className="mt-2 text-xs text-zinc-500">
               Response deadline: {new Date(submittedDispute.deadline).toLocaleString()}
             </div>
             {latestReceipt && (
-              <div className="mt-4 rounded-lg border border-slate-800 bg-slate-950/60 p-3">
-                <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">Action Receipt</div>
+              <div className="mt-4 rounded-lg border border-zinc-800 bg-black/60 p-3">
+                <div className="text-xs uppercase tracking-wide text-zinc-500 mb-1">Action Receipt</div>
                 <div className="text-sm text-white">{latestReceipt.label}</div>
-                <div className="text-xs text-slate-400 mt-1">
-                  Mode: <span className="text-slate-200 capitalize">{latestReceipt.mode}</span>
+                <div className="text-xs text-zinc-400 mt-1">
+                  Mode: <span className="text-zinc-200 capitalize">{latestReceipt.mode}</span>
                 </div>
-                <div className="text-xs text-slate-500 mt-1 break-all">{latestReceipt.txHash}</div>
+                <div className="text-xs text-zinc-500 mt-1 break-all">{latestReceipt.txHash}</div>
               </div>
             )}
           </div>
           <div className="flex gap-4">
             <button
               onClick={() => onViewDispute(submittedDispute.id)}
-              className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-all"
+              className="flex-1 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg transition-all"
             >
               View Dispute
             </button>
             <button
               onClick={() => onNavigate('dashboard')}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium rounded-lg transition-all"
+              className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg transition-all"
             >
               View Dashboard
             </button>
@@ -233,7 +233,7 @@ export default function SubmitDispute({
   }
 
   return (
-    <section className="min-h-screen bg-slate-950 pt-24 pb-16">
+    <section className="min-h-screen bg-black pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -241,7 +241,7 @@ export default function SubmitDispute({
           className="text-center mb-8"
         >
           <h1 className="text-3xl font-bold text-white mb-2">Submit a Dispute</h1>
-          <p className="text-slate-400">
+          <p className="text-zinc-400">
             Open a new dispute and let AI validators reach a fair verdict
           </p>
         </motion.div>
@@ -265,15 +265,15 @@ export default function SubmitDispute({
             <div key={progressStep} className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                 progressStep < step
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-white text-black'
                   : progressStep === step
-                    ? 'bg-violet-600 text-white ring-4 ring-violet-600/30'
-                    : 'bg-slate-800 text-slate-500'
+                    ? 'bg-white text-black ring-4 ring-zinc-300/30'
+                    : 'bg-zinc-900 text-zinc-500'
               }`}>
                 {progressStep < step ? <CheckCircle2 className="w-4 h-4" /> : progressStep}
               </div>
               {progressStep < 3 && (
-                <div className={`w-12 h-0.5 ${progressStep < step ? 'bg-violet-600' : 'bg-slate-800'}`} />
+                <div className={`w-12 h-0.5 ${progressStep < step ? 'bg-zinc-200' : 'bg-zinc-900'}`} />
               )}
             </div>
           ))}
@@ -283,12 +283,12 @@ export default function SubmitDispute({
           key={step}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-6"
+          className="bg-zinc-950/70 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6"
         >
           {step === 1 && (
             <>
               <h2 className="text-xl font-semibold text-white mb-2">Select Dispute Category</h2>
-              <p className="text-slate-400 text-sm mb-6">Choose the type that best describes your dispute</p>
+              <p className="text-zinc-400 text-sm mb-6">Choose the type that best describes your dispute</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 {categories.map((entry) => (
@@ -297,13 +297,13 @@ export default function SubmitDispute({
                     onClick={() => setCategory(entry.id)}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       category === entry.id
-                        ? 'bg-violet-500/20 border-violet-500/50'
-                        : 'bg-slate-800/50 border-slate-700 hover:border-slate-600'
+                        ? 'bg-white/10 border-zinc-500'
+                        : 'bg-zinc-900/50 border-zinc-700 hover:border-zinc-500'
                     }`}
                   >
-                    <entry.icon className={`w-8 h-8 mb-3 ${category === entry.id ? 'text-violet-400' : 'text-slate-400'}`} />
+                    <entry.icon className={`w-8 h-8 mb-3 ${category === entry.id ? 'text-zinc-200' : 'text-zinc-400'}`} />
                     <h3 className="text-white font-medium mb-1">{entry.title}</h3>
-                    <p className="text-slate-400 text-sm">{entry.description}</p>
+                    <p className="text-zinc-400 text-sm">{entry.description}</p>
                   </button>
                 ))}
               </div>
@@ -311,7 +311,7 @@ export default function SubmitDispute({
               <button
                 onClick={() => setStep(2)}
                 disabled={!category}
-                className="w-full px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all"
+                className="w-full px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all"
               >
                 Continue
               </button>
@@ -321,74 +321,74 @@ export default function SubmitDispute({
           {step === 2 && (
             <>
               <h2 className="text-xl font-semibold text-white mb-2">Dispute Details</h2>
-              <p className="text-slate-400 text-sm mb-6">Provide information about your dispute</p>
+              <p className="text-zinc-400 text-sm mb-6">Provide information about your dispute</p>
 
               <div className="space-y-4 mb-6">
                 {walletAddress && (
-                  <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-100/80">
+                  <div className="rounded-xl border border-zinc-700 bg-white/5 p-4 text-sm text-zinc-200">
                     Connected wallet detected. Your claimant wallet address has been prefilled for this dispute.
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Your Name / Handle</label>
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">Your Name / Handle</label>
                     <input
                       type="text"
                       value={formData.claimantName}
                       onChange={(event) => setFormData({ ...formData, claimantName: event.target.value })}
                       placeholder="e.g., DevStudio Labs"
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                      className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Your Wallet Address</label>
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">Your Wallet Address</label>
                     <input
                       type="text"
                       value={formData.claimantAddress}
                       onChange={(event) => setFormData({ ...formData, claimantAddress: event.target.value })}
                       placeholder="0x..."
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono"
+                      className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Dispute Title</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Dispute Title</label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(event) => setFormData({ ...formData, title: event.target.value })}
                     placeholder="e.g., Website Development - Milestone Payment"
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Description</label>
                   <textarea
                     value={formData.description}
                     onChange={(event) => setFormData({ ...formData, description: event.target.value })}
                     placeholder="Brief overview of the dispute..."
                     rows={3}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 resize-none"
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Your Claim Statement</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Your Claim Statement</label>
                   <textarea
                     value={formData.claim}
                     onChange={(event) => setFormData({ ...formData, claim: event.target.value })}
                     placeholder="Detailed explanation of your position and what you're claiming..."
                     rows={4}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 resize-none"
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
                     <FileText className="w-4 h-4 inline mr-2" />
                     Evidence (IPFS Hash or Upload)
                   </label>
@@ -398,7 +398,7 @@ export default function SubmitDispute({
                       value={formData.evidenceHash}
                       onChange={(event) => handleManualEvidenceChange(event.target.value)}
                       placeholder="Qm... or https://..."
-                      className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono text-sm"
+                      className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 font-mono text-sm"
                     />
                     <input
                       ref={fileInputRef}
@@ -410,7 +410,7 @@ export default function SubmitDispute({
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploadingEvidence}
-                      className="px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                      className="px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-zinc-300 hover:text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {isUploadingEvidence ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -419,27 +419,27 @@ export default function SubmitDispute({
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-zinc-500 mt-1">
                     {hasConfiguredIpfs()
                       ? 'Pinata IPFS upload is enabled for this workspace.'
                       : 'No Pinata JWT detected. Uploaded files will use a local demo URL until IPFS credentials are added.'}
                   </p>
                   {uploadError && (
-                    <div className="mt-2 text-sm text-rose-300">{uploadError}</div>
+                    <div className="mt-2 text-sm text-zinc-300">{uploadError}</div>
                   )}
                   {uploadedEvidence && uploadedEvidenceUrl && (
-                    <div className="mt-3 rounded-xl border border-slate-700 bg-slate-800/50 p-3 text-sm">
+                    <div className="mt-3 rounded-xl border border-zinc-700 bg-zinc-900/50 p-3 text-sm">
                       <div className="text-white font-medium">
                         {uploadedEvidence.fileName ?? uploadedEvidence.hash}
                       </div>
-                      <div className="text-slate-400 mt-1 capitalize">
+                      <div className="text-zinc-400 mt-1 capitalize">
                         Evidence source: {uploadedEvidence.source.replace('-', ' ')}
                       </div>
                       <a
                         href={uploadedEvidenceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-2 inline-flex items-center gap-1 text-violet-400 hover:underline"
+                        className="mt-2 inline-flex items-center gap-1 text-zinc-200 hover:underline"
                       >
                         Open evidence
                         <ExternalLink className="w-3 h-3" />
@@ -452,14 +452,14 @@ export default function SubmitDispute({
               <div className="flex gap-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-all"
+                  className="flex-1 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg transition-all"
                 >
                   Back
                 </button>
                 <button
                   onClick={() => setStep(3)}
                   disabled={!formData.claimantName || !formData.claimantAddress || !formData.title || !formData.claim}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all"
+                  className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all"
                 >
                   Continue
                 </button>
@@ -470,99 +470,99 @@ export default function SubmitDispute({
           {step === 3 && (
             <>
               <h2 className="text-xl font-semibold text-white mb-2">Respondent & Escrow</h2>
-              <p className="text-slate-400 text-sm mb-6">Identify the other party and align the fee model with the PRD</p>
+              <p className="text-zinc-400 text-sm mb-6">Identify the other party and align the fee model with the PRD</p>
 
               <div className="space-y-4 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Respondent Name / Handle</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Respondent Name / Handle</label>
                   <input
                     type="text"
                     value={formData.respondentName}
                     onChange={(event) => setFormData({ ...formData, respondentName: event.target.value })}
                     placeholder="e.g., TechCorp Inc"
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Respondent Wallet Address</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Respondent Wallet Address</label>
                   <input
                     type="text"
                     value={formData.respondentAddress}
                     onChange={(event) => setFormData({ ...formData, respondentAddress: event.target.value })}
                     placeholder="0x..."
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono"
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300 font-mono"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Dispute Value (ETH)</label>
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">Dispute Value (ETH)</label>
                     <input
                       type="number"
                       value={formData.disputeValue}
                       onChange={(event) => setFormData({ ...formData, disputeValue: event.target.value })}
                       placeholder="0.00"
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                      className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Your Stake (ETH)</label>
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">Your Stake (ETH)</label>
                     <input
                       type="number"
                       value={formData.stakeAmount}
                       onChange={(event) => setFormData({ ...formData, stakeAmount: event.target.value })}
                       placeholder="0.00"
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                      className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-300"
                     />
                   </div>
                 </div>
 
-                <div className="bg-slate-800/50 rounded-xl p-4">
+                <div className="bg-zinc-900/50 rounded-xl p-4">
                   <h3 className="text-sm font-medium text-white mb-3">PRD Fee Breakdown</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Filing Fee (0.5%)</span>
+                      <span className="text-zinc-400">Filing Fee (0.5%)</span>
                       <span className="text-white">{formatEth(feePreview?.filingFee ?? 0)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Resolution Fee (1.0%)</span>
+                      <span className="text-zinc-400">Resolution Fee (1.0%)</span>
                       <span className="text-white">{formatEth(feePreview?.resolutionFee ?? 0)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Protocol Dev Fee</span>
+                      <span className="text-zinc-400">Protocol Dev Fee</span>
                       <span className="text-white">{formatEth(feePreview?.protocolDevFee ?? 0)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Validator Reward Pool</span>
+                      <span className="text-zinc-400">Validator Reward Pool</span>
                       <span className="text-white">{formatEth(feePreview?.validatorReward ?? 0)}</span>
                     </div>
-                    <div className="flex justify-between pt-2 border-t border-slate-700">
-                      <span className="text-slate-300 font-medium">Claimant Deposit at Open</span>
-                      <span className="text-violet-400 font-medium">{formatEth(feePreview?.claimantDeposit ?? 0)}</span>
+                    <div className="flex justify-between pt-2 border-t border-zinc-700">
+                      <span className="text-zinc-300 font-medium">Claimant Deposit at Open</span>
+                      <span className="text-zinc-200 font-medium">{formatEth(feePreview?.claimantDeposit ?? 0)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-300 font-medium">Expected Respondent Deposit</span>
-                      <span className="text-violet-400 font-medium">{formatEth(feePreview?.respondentDeposit ?? 0)}</span>
+                      <span className="text-zinc-300 font-medium">Expected Respondent Deposit</span>
+                      <span className="text-zinc-200 font-medium">{formatEth(feePreview?.respondentDeposit ?? 0)}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
-                  <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
-                  <div className="text-sm text-yellow-300/80">
+                <div className="flex items-start gap-3 p-4 bg-zinc-900/60 border border-zinc-700 rounded-xl">
+                  <AlertCircle className="w-5 h-5 text-zinc-300 shrink-0 mt-0.5" />
+                  <div className="text-sm text-zinc-300">
                     <strong>Important:</strong> Stakes are locked until the verdict is finalized. Filing and resolution fees follow the PRD model, and the appeal premium is only charged if the losing party escalates once.
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-700 bg-slate-800/40 p-4 text-sm text-slate-400">
+                <div className="rounded-xl border border-zinc-700 bg-zinc-900/40 p-4 text-sm text-zinc-400">
                   {walletAddress
                     ? 'A connected wallet is available. Submission will use a contract-ready adapter and fall back to a wallet-signed receipt if live contract writes are not configured.'
                     : 'No wallet is connected. Submission will still work in transparent demo mode until a wallet is attached.'}
                 </div>
 
                 {submitError && (
-                  <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+                  <div className="rounded-xl border border-zinc-600 bg-white/5 p-4 text-sm text-zinc-200">
                     {submitError}
                   </div>
                 )}
@@ -571,7 +571,7 @@ export default function SubmitDispute({
               <div className="flex gap-4">
                 <button
                   onClick={() => setStep(2)}
-                  className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-all"
+                  className="flex-1 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg transition-all"
                 >
                   Back
                 </button>
@@ -584,7 +584,7 @@ export default function SubmitDispute({
                     !formData.stakeAmount ||
                     isSubmitting
                   }
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -603,3 +603,5 @@ export default function SubmitDispute({
     </section>
   );
 }
+
+

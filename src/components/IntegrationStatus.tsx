@@ -16,32 +16,32 @@ const iconMap: Record<ReadinessItem['id'], typeof Wallet> = {
 };
 
 const toneMap: Record<ReadinessItem['level'], string> = {
-  ready: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
-  attention: 'border-yellow-500/20 bg-yellow-500/10 text-yellow-200',
-  missing: 'border-rose-500/20 bg-rose-500/10 text-rose-200',
+  ready: 'border-zinc-600 bg-white/10 text-zinc-100',
+  attention: 'border-zinc-700 bg-zinc-900 text-zinc-200',
+  missing: 'border-zinc-800 bg-zinc-950 text-zinc-400',
 };
 
 export default function IntegrationStatus({ walletAddress, compact = false }: IntegrationStatusProps) {
   const snapshot = useMemo(() => getReadinessSnapshot(walletAddress), [walletAddress]);
 
   return (
-    <section className={`rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm ${compact ? 'p-4' : 'p-6'}`}>
+    <section className={`rounded-2xl border border-zinc-800 bg-zinc-950/70 backdrop-blur-sm ${compact ? 'p-4' : 'p-6'}`}>
       <div className={`flex flex-col gap-3 ${compact ? 'md:flex-row md:items-center md:justify-between' : 'mb-6 md:flex-row md:items-start md:justify-between'}`}>
         <div>
           <div className="flex items-center gap-2">
             {snapshot.unresolved.length === 0 ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <CheckCircle2 className="w-5 h-5 text-white" />
             ) : (
-              <AlertTriangle className="w-5 h-5 text-yellow-400" />
+              <AlertTriangle className="w-5 h-5 text-zinc-300" />
             )}
             <h2 className="text-lg font-semibold text-white">Integration Readiness</h2>
           </div>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-zinc-400">
             {snapshot.readyCount}/{snapshot.items.length} core integration layers are configured for live demo usage.
           </p>
         </div>
         {snapshot.unresolved.length > 0 && (
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-slate-300">
+          <div className="rounded-xl border border-zinc-800 bg-black/60 px-4 py-3 text-sm text-zinc-300">
             Next unblocker: {snapshot.unresolved[0]}
           </div>
         )}
@@ -53,7 +53,7 @@ export default function IntegrationStatus({ walletAddress, compact = false }: In
           return (
             <div key={item.id} className={`rounded-xl border p-4 ${toneMap[item.level]}`}>
               <div className="mb-3 flex items-center gap-3">
-                <div className="rounded-lg bg-slate-950/50 p-2">
+                <div className="rounded-lg bg-black/50 p-2">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>

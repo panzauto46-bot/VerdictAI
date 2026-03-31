@@ -7,12 +7,12 @@ export default function LiveDemo() {
   const [isRunning, setIsRunning] = useState(false);
 
   const steps = [
-    { label: 'Dispute Submitted', icon: Users, color: 'text-blue-400' },
-    { label: 'LLM-A Analyzing...', icon: Brain, color: 'text-purple-400' },
-    { label: 'LLM-B Analyzing...', icon: Brain, color: 'text-pink-400' },
-    { label: 'LLM-C Analyzing...', icon: Brain, color: 'text-indigo-400' },
-    { label: 'Consensus Reached', icon: Shield, color: 'text-emerald-400' },
-    { label: 'Verdict Finalized', icon: CheckCircle2, color: 'text-green-400' },
+    { label: 'Dispute Submitted', icon: Users, color: 'text-zinc-200' },
+    { label: 'LLM-A Analyzing...', icon: Brain, color: 'text-zinc-200' },
+    { label: 'LLM-B Analyzing...', icon: Brain, color: 'text-zinc-200' },
+    { label: 'LLM-C Analyzing...', icon: Brain, color: 'text-zinc-200' },
+    { label: 'Consensus Reached', icon: Shield, color: 'text-zinc-100' },
+    { label: 'Verdict Finalized', icon: CheckCircle2, color: 'text-white' },
   ];
 
   const startDemo = () => {
@@ -34,7 +34,7 @@ export default function LiveDemo() {
   }, [step, isRunning, steps.length]);
 
   return (
-    <section id="demo" className="py-24 bg-slate-900">
+    <section id="demo" className="py-24 bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -43,7 +43,7 @@ export default function LiveDemo() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
-          <p className="text-lg text-slate-400">
+          <p className="text-lg text-zinc-400">
             Watch how multiple AI validators independently analyze and reach consensus
           </p>
         </motion.div>
@@ -52,13 +52,13 @@ export default function LiveDemo() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-8"
+          className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-sm"
         >
           {/* Demo Visualization */}
           <div className="relative h-64 mb-8">
             {/* Center Node */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/25 z-10">
-              <Zap className="w-10 h-10 text-white" />
+            <div className="absolute top-1/2 left-1/2 z-10 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-white shadow-lg shadow-white/10">
+              <Zap className="h-10 w-10 text-black" />
             </div>
 
             {/* Validator Nodes */}
@@ -86,25 +86,25 @@ export default function LiveDemo() {
                   <div
                     className={`w-14 h-14 rounded-lg flex items-center justify-center transition-colors ${
                       isComplete
-                        ? 'bg-emerald-500/20 border-2 border-emerald-500'
+                        ? 'border-2 border-white bg-white/10'
                         : isActive
-                          ? 'bg-purple-500/20 border-2 border-purple-500'
-                          : 'bg-slate-700/50 border-2 border-slate-600'
+                          ? 'border-2 border-zinc-200 bg-zinc-100/10'
+                          : 'border-2 border-zinc-700 bg-zinc-900/50'
                     }`}
                   >
                     <Brain
                       className={`w-6 h-6 ${
                         isComplete
-                          ? 'text-emerald-400'
+                          ? 'text-white'
                           : isActive
-                            ? 'text-purple-400 animate-pulse'
-                            : 'text-slate-500'
+                            ? 'text-zinc-200 animate-pulse'
+                            : 'text-zinc-500'
                       }`}
                     />
                   </div>
                   <div className="text-center mt-2">
                     <span
-                      className={`text-xs ${isComplete ? 'text-emerald-400' : isActive ? 'text-purple-400' : 'text-slate-500'}`}
+                      className={`text-xs ${isComplete ? 'text-white' : isActive ? 'text-zinc-200' : 'text-zinc-500'}`}
                     >
                       LLM-{String.fromCharCode(65 + i)}
                     </span>
@@ -129,7 +129,7 @@ export default function LiveDemo() {
                     y1="128"
                     x2={x}
                     y2={y}
-                    stroke={isActive ? '#8b5cf6' : '#475569'}
+                    stroke={isActive ? '#ffffff' : '#3f3f46'}
                     strokeWidth="2"
                     strokeDasharray={isActive ? '0' : '5,5'}
                     className="transition-all duration-500"
@@ -148,7 +148,7 @@ export default function LiveDemo() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
-                    i === step ? 'bg-violet-500/20 border border-violet-500/50' : 'bg-slate-700/50'
+                    i === step ? 'border border-zinc-200 bg-white/10' : 'bg-zinc-900/70'
                   }`}
                 >
                   <currentStep.icon className={`w-4 h-4 ${currentStep.color}`} />
@@ -164,11 +164,11 @@ export default function LiveDemo() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center"
+                className="rounded-xl border border-zinc-600 bg-zinc-900 p-4 text-center"
               >
-                <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                <div className="text-emerald-300 font-semibold">Consensus: Party A wins (87% confidence)</div>
-                <div className="text-emerald-400/70 text-sm">5/5 validators agreed | Auto-enforcement triggered</div>
+                <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-white" />
+                <div className="font-semibold text-white">Consensus: Party A wins (87% confidence)</div>
+                <div className="text-sm text-zinc-400">5/5 validators agreed | Auto-enforcement triggered</div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -177,7 +177,7 @@ export default function LiveDemo() {
           {!isRunning && step === 0 && (
             <button
               onClick={startDemo}
-              className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium rounded-lg transition-all"
+              className="mt-4 w-full rounded-lg bg-white px-6 py-3 font-semibold text-black transition-all hover:bg-zinc-200"
             >
               Run Demo
             </button>
@@ -189,7 +189,7 @@ export default function LiveDemo() {
                 setStep(0);
                 startDemo();
               }}
-              className="w-full mt-4 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-all"
+              className="mt-4 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-6 py-3 font-medium text-white transition-all hover:bg-zinc-800"
             >
               Run Again
             </button>

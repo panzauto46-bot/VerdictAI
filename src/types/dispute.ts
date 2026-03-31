@@ -154,10 +154,10 @@ export const statusLabels: Record<DisputeStatus, string> = {
 };
 
 export const statusColors: Record<DisputeStatus, string> = {
-  open: 'bg-blue-100 text-blue-700',
-  responding: 'bg-yellow-100 text-yellow-700',
-  reviewing: 'bg-purple-100 text-purple-700',
-  verdict: 'bg-green-100 text-green-700',
-  enforced: 'bg-emerald-100 text-emerald-700',
-  appealed: 'bg-orange-100 text-orange-700',
+  open: 'bg-zinc-800 text-zinc-100 border border-zinc-700',
+  responding: 'bg-zinc-900 text-zinc-200 border border-zinc-700',
+  reviewing: 'bg-white/10 text-zinc-100 border border-zinc-600',
+  verdict: 'bg-white text-black border border-zinc-200',
+  enforced: 'bg-zinc-100 text-zinc-900 border border-zinc-300',
+  appealed: 'bg-zinc-700 text-zinc-100 border border-zinc-600',
 };
