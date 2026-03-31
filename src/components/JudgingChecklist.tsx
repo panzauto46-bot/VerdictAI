@@ -14,9 +14,9 @@ const demoFlow = [
 
 const judgeChecks = [
   'All core actions produce receipts (submit/respond/verdict/claim/appeal).',
-  'On-chain mode shows transaction hash + explorer link when available.',
+  'On-chain mode shows transaction hash + explorer link (when available).',
   'UI handles insufficient balance with clear guidance + demo fallback.',
-  'Dispute state transitions match lifecycle: responding -> reviewing -> verdict -> enforced.',
+  'Dispute states match lifecycle: open/responding -> reviewing -> verdict -> enforced.',
 ];
 
 export default function JudgingChecklist({ onNavigate }: JudgingChecklistProps) {

@@ -16,8 +16,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-zinc-200 text-sm max-w-sm mb-4">
-              Decentralized AI-powered dispute resolution built on GenLayer.
-              Trustless, fair, and permanently enforced on-chain.
+              Decentralized AI-powered dispute resolution built on GenLayer Intelligent Contracts.
+              Powered by Optimistic Democracy and the Equivalence Principle.
             </p>
             <div className="flex items-center gap-4">
               <span className="text-zinc-200 transition-colors">

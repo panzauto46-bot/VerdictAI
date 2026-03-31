@@ -22,12 +22,12 @@ export default function Features() {
     {
       icon: DollarSign,
       title: 'Cost Effective',
-      description: 'Only 0.5-1.5% of dispute value vs thousands in legal fees.',
+      description: 'Typically 0.5-1.5% of dispute value vs $1K-$50K+ in traditional arbitration costs.',
     },
     {
       icon: Scale,
       title: 'Truly Fair',
-      description: 'Multi-LLM consensus eliminates single-point bias and human emotion.',
+      description: 'Optimistic Democracy + Equivalence Principle reduce single-point bias and model dominance.',
     },
     {
       icon: Lock,
@@ -42,7 +42,7 @@ export default function Features() {
     {
       icon: Repeat,
       title: 'Appeal Option',
-      description: 'One-time appeal with expanded validator panel for edge cases.',
+      description: 'One-time appeal can escalate to an expanded validator panel for edge cases.',
     },
   ];
 
@@ -50,25 +50,25 @@ export default function Features() {
     {
       icon: Briefcase,
       title: 'Freelance',
-      description: 'Milestone disputes, scope creep, quality issues',
+      description: 'Milestone not delivered, quality below spec, scope creep',
       color: 'bg-zinc-900 border-zinc-700 text-zinc-200',
     },
     {
       icon: Users,
       title: 'DAO Bounty',
-      description: 'Unpaid rewards, completion disagreements',
+      description: 'Work submitted but not rewarded, completion disagreements',
       color: 'bg-zinc-900 border-zinc-700 text-zinc-200',
     },
     {
       icon: Image,
       title: 'NFT Sale',
-      description: 'Authenticity claims, delivery issues',
+      description: 'Item not delivered post-payment, counterfeit or authenticity claims',
       color: 'bg-zinc-900 border-zinc-700 text-zinc-200',
     },
     {
       icon: TrendingUp,
       title: 'DeFi',
-      description: 'Oracle disputes, liquidation claims',
+      description: 'Loan default, liquidation disputes, oracle manipulation claims',
       color: 'bg-zinc-900 border-zinc-700 text-zinc-200',
     },
   ];
@@ -159,7 +159,7 @@ export default function Features() {
               <tbody>
                 <tr className="border-b border-zinc-800">
                   <td className="py-4 px-4 text-zinc-200">Traditional Arbitration</td>
-                  <td className="text-center py-4 px-4 text-zinc-300">Weeks-Months</td>
+                  <td className="text-center py-4 px-4 text-zinc-300">Weeks to months</td>
                   <td className="text-center py-4 px-4 text-zinc-300">$1K-$50K+</td>
                   <td className="text-center py-4 px-4 text-zinc-300">Off-chain</td>
                   <td className="text-center py-4 px-4 text-zinc-300">Centralized</td>

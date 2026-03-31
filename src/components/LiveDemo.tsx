@@ -8,11 +8,11 @@ export default function LiveDemo() {
 
   const steps = [
     { label: 'Dispute Submitted', icon: Users, color: 'text-zinc-200' },
-    { label: 'LLM-A Analyzing...', icon: Brain, color: 'text-zinc-200' },
-    { label: 'LLM-B Analyzing...', icon: Brain, color: 'text-zinc-200' },
-    { label: 'LLM-C Analyzing...', icon: Brain, color: 'text-zinc-200' },
-    { label: 'Consensus Reached', icon: Shield, color: 'text-zinc-100' },
-    { label: 'Verdict Finalized', icon: CheckCircle2, color: 'text-white' },
+    { label: 'LLM-A Evaluating Rubric', icon: Brain, color: 'text-zinc-200' },
+    { label: 'LLM-B Evaluating Rubric', icon: Brain, color: 'text-zinc-200' },
+    { label: 'LLM-C Evaluating Rubric', icon: Brain, color: 'text-zinc-200' },
+    { label: 'Equivalent Outcome Reached', icon: Shield, color: 'text-zinc-100' },
+    { label: 'Verdict Finalized On-Chain', icon: CheckCircle2, color: 'text-white' },
   ];
 
   const startDemo = () => {
@@ -44,7 +44,7 @@ export default function LiveDemo() {
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">See AI Consensus in Action</h2>
           <p className="text-base sm:text-lg text-zinc-200">
-            Watch how multiple AI validators independently analyze and reach consensus
+            Watch how independent validators analyze with the same rubric and converge on an equivalent result
           </p>
         </motion.div>
 
@@ -168,7 +168,7 @@ export default function LiveDemo() {
               >
                 <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-white" />
                 <div className="font-semibold text-white">Consensus: Party A wins (87% confidence)</div>
-                <div className="text-sm text-zinc-200">5/5 validators agreed | Auto-enforcement triggered</div>
+                <div className="text-sm text-zinc-200">5/5 validators reached equivalent outcome | Auto on-chain enforcement triggered</div>
               </motion.div>
             )}
           </AnimatePresence>

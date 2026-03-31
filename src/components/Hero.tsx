@@ -33,7 +33,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           >
             <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-200">
               <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-              Built for GenLayer Testnet
+              Built for GenLayer Bradbury Testnet
             </span>
           </motion.div>
 
@@ -44,13 +44,13 @@ export default function Hero({ onNavigate }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mb-5 text-4xl font-bold text-white sm:text-6xl lg:text-7xl"
           >
-            Trustless Disputes.
+            Trustless disputes.
             <br />
             <span className="bg-gradient-to-r from-white via-zinc-300 to-zinc-500 bg-clip-text text-transparent">
-              AI Consensus.
+              AI consensus.
             </span>
             <br />
-            On-chain Justice.
+            On-chain justice.
           </motion.h1>
 
           {/* Subtitle */}
@@ -60,9 +60,9 @@ export default function Hero({ onNavigate }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mx-auto mb-10 max-w-3xl text-base text-zinc-200 sm:text-lg md:text-xl"
           >
-            VerdictAI is a decentralized dispute resolution protocol powered by GenLayer's Intelligent
-            Contracts. Multi-LLM AI validators reach consensus on disputes - fair, fast, and
-            permanently enforced on-chain.
+            VerdictAI is a decentralized dispute resolution protocol built on GenLayer Intelligent
+            Contracts. Validators evaluate disputes through Optimistic Democracy and the Equivalence
+            Principle to produce fair, transparent, and permanently enforceable outcomes.
           </motion.p>
 
           {/* CTA Buttons */}

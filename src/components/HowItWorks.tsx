@@ -16,22 +16,22 @@ export default function HowItWorks() {
     {
       icon: Brain,
       title: 'AI Review',
-      description: 'GenLayer Intelligent Contract sends case to multiple LLM validators for independent analysis.',
+      description: 'GenLayer Intelligent Contract sends the case to multiple LLM validators for independent rubric-based analysis.',
     },
     {
       icon: Shield,
       title: 'Optimistic Democracy',
-      description: "Validators reach consensus using GenLayer's Optimistic Democracy mechanism with Equivalence Principle.",
+      description: "Validators compare outcomes through GenLayer's Optimistic Democracy and Equivalence Principle consistency checks.",
     },
     {
       icon: CheckCircle2,
       title: 'Verdict On-Chain',
-      description: 'Ruling is finalized on-chain with full reasoning summary published for transparency.',
+      description: 'Ruling is finalized on-chain with an immutable reasoning summary published for full transparency.',
     },
     {
       icon: Coins,
       title: 'Auto Enforcement',
-      description: "Winner automatically receives escrowed funds. Loser's stake is redistributed.",
+      description: "Winner automatically receives escrowed funds while the loser's stake is partially burned or redistributed.",
     },
   ];
 
@@ -47,7 +47,7 @@ export default function HowItWorks() {
         >
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">How VerdictAI Works</h2>
           <p className="mx-auto max-w-2xl text-base text-zinc-200 sm:text-lg">
-            A 6-step dispute lifecycle powered by GenLayer's decentralized AI consensus
+            A 6-step dispute lifecycle powered by Optimistic Democracy and the Equivalence Principle
           </p>
         </motion.div>
 
@@ -119,7 +119,7 @@ export default function HowItWorks() {
                   </div>
                 ))}
               </div>
-              <div className="text-zinc-200 text-sm">Validators (Independent Analysis)</div>
+              <div className="text-zinc-200 text-sm">Validators (Independent Analysis + Equivalence Check)</div>
               <div className="w-0.5 h-8 bg-zinc-700" />
 
               {/* Consensus */}
