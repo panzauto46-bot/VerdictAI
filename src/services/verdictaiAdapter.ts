@@ -323,6 +323,14 @@ export async function respondToDisputeAction(
   input: DisputeResponseInput,
   walletAddress: string | null
 ): Promise<ActionReceipt> {
+  if (dispute.serviceMode === 'demo') {
+    return simulateAction(
+      `${dispute.id}-respond-demo`,
+      'Respondent submission recorded in demo mode fallback (no on-chain write).',
+      'demo'
+    );
+  }
+
   const stakeWei = parseEther(input.stakeAmount.toFixed(6));
   const args = [
     dispute.id,
@@ -351,6 +359,14 @@ export async function respondToDisputeAction(
 }
 
 export async function requestVerdictAction(dispute: Dispute, walletAddress: string | null): Promise<ActionReceipt> {
+  if (dispute.serviceMode === 'demo') {
+    return simulateAction(
+      `${dispute.id}-verdict-demo`,
+      'AI verdict requested in demo mode fallback (no on-chain write).',
+      'demo'
+    );
+  }
+
   const args = [dispute.id];
 
   if (walletAddress) {
@@ -372,6 +388,14 @@ export async function requestVerdictAction(dispute: Dispute, walletAddress: stri
 }
 
 export async function claimFundsAction(dispute: Dispute, walletAddress: string | null): Promise<ActionReceipt> {
+  if (dispute.serviceMode === 'demo') {
+    return simulateAction(
+      `${dispute.id}-claim-demo`,
+      'Fund release recorded in demo mode fallback (no on-chain write).',
+      'demo'
+    );
+  }
+
   const args = [dispute.id];
 
   if (walletAddress) {
@@ -393,6 +417,14 @@ export async function claimFundsAction(dispute: Dispute, walletAddress: string |
 }
 
 export async function appealVerdictAction(dispute: Dispute, walletAddress: string | null): Promise<ActionReceipt> {
+  if (dispute.serviceMode === 'demo') {
+    return simulateAction(
+      `${dispute.id}-appeal-demo`,
+      'Appeal recorded in demo mode fallback (no on-chain write).',
+      'demo'
+    );
+  }
+
   const args = [dispute.id];
 
   if (walletAddress) {
