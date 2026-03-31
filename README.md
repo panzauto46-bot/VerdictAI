@@ -380,6 +380,8 @@ Step 7: withdraw_funds(dispute_id)  ← Claim funds
 
 ## 🗺️ Roadmap
 
+**Last updated:** `March 31, 2026`
+
 | Phase | Status | Description |
 |-------|--------|-------------|
 | Phase 1 - Foundation | ✅ Complete | App state, data model, UI cleanup |

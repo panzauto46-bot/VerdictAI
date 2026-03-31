@@ -8,7 +8,7 @@ This document tracks the development roadmap for **VerdictAI** — a decentraliz
 
 ## ✅ Progress Summary
 
-**Last updated:** `March 29, 2026`
+**Last updated:** `March 31, 2026`
 
 ### Completed Milestones
 
@@ -29,6 +29,8 @@ This document tracks the development roadmap for **VerdictAI** — a decentraliz
 | 13 | **Full lifecycle verified on-chain** | ✅ Done | Mar 29 |
 | 14 | **Frontend adapter wired to contract** | ✅ Done | Mar 29 |
 | 15 | **Professional README** | ✅ Done | Mar 29 |
+| 16 | **Hero centered + visual cleanup** | ✅ Done | Mar 31 |
+| 17 | **Wallet error guidance improved** | ✅ Done | Mar 31 |
 
 ### Smart Contract Verification
 
@@ -70,8 +72,7 @@ All 7 contract methods tested and verified on GenLayer Studio:
 
 ### 🔄 In Progress
 
-- Polish UI animations for contract interaction feedback
-- Add loading states during on-chain transactions
+- Final UI micro-polish for judging (mobile spacing + button hierarchy)
 - Explorer link integration for transaction hashes
 
 ### 🔮 Future (Post-Hackathon)
