@@ -109,14 +109,20 @@ export type DisputeLifecycleEvent =
 export class VerdictAI {
   private client: ReturnType<typeof createClient>;
   private contractAddress: Address;
+  private chain: 'testnetBradbury' | 'localnet';
+  private endpoint?: string;
+  private provider?: any;
 
   constructor(config: VerdictAIConfig) {
-    const chain = config.chain === 'localnet' ? localnet : testnetBradbury;
+    this.chain = config.chain === 'localnet' ? 'localnet' : 'testnetBradbury';
+    this.endpoint = config.endpoint || undefined;
+    this.provider = config.provider || undefined;
+    const chain = this.chain === 'localnet' ? localnet : testnetBradbury;
 
     this.client = createClient({
       chain,
-      endpoint: config.endpoint || undefined,
-      provider: config.provider || undefined,
+      endpoint: this.endpoint,
+      provider: this.provider,
     });
 
     this.contractAddress = config.contractAddress as Address;
@@ -158,7 +164,7 @@ export class VerdictAI {
       params.respondentAddress,
       params.respondentName,
       params.stakeAmount,
-    ]);
+    ], params.stakeAmount);
   }
 
   /**
@@ -175,7 +181,7 @@ export class VerdictAI {
       params.evidenceHash,
       params.respondentName,
       params.stakeAmount,
-    ]);
+    ], params.stakeAmount);
   }
 
   /**
@@ -245,6 +251,18 @@ export class VerdictAI {
   }
 
   /**
+   * Resolve the latest dispute ID created by a claimant.
+   *
+   * @param claimantAddress - The claimant wallet address
+   * @returns Latest dispute ID or null when none exists
+   */
+  async getLatestDisputeIdByClaimant(claimantAddress: string): Promise<string | null> {
+    const result = await this._readContract('get_latest_dispute_id_by_claimant', [claimantAddress]);
+    const disputeId = String(result ?? '').trim();
+    return disputeId || null;
+  }
+
+  /**
    * Get just the verdict data for a dispute.
    * 
    * @param disputeId - The dispute ID
@@ -285,10 +303,13 @@ export class VerdictAI {
   private async _writeContract(
     walletAddress: string,
     functionName: string,
-    args: unknown[]
+    args: unknown[],
+    value: bigint = 0n
   ): Promise<string> {
     const client = createClient({
-      chain: testnetBradbury,
+      chain: this.chain === 'localnet' ? localnet : testnetBradbury,
+      endpoint: this.endpoint,
+      provider: this.provider,
       account: walletAddress as Address,
     });
 
@@ -296,7 +317,7 @@ export class VerdictAI {
       address: this.contractAddress,
       functionName,
       args: args as CalldataEncodable[],
-      value: 0n,
+      value,
     });
 
     await client.waitForTransactionReceipt({

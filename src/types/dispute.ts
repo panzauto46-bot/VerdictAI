@@ -66,6 +66,7 @@ export interface ActionReceipt {
   txHash: string;
   explorerUrl?: string;
   message: string;
+  contractDisputeId?: string;
 }
 
 export interface Party {

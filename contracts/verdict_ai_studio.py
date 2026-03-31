@@ -1,7 +1,7 @@
 # v0.2.16
 # { "Depends": "py-genlayer:test" }
 
-# VerdictAI - Decentralized AI Dispute Resolution on GenLayer
+# VerdictAI - Studio-safe deployment version for GenLayer Studio
 
 import json
 from dataclasses import dataclass
@@ -39,25 +39,10 @@ class Dispute:
 
 class VerdictAI(gl.Contract):
     disputes: TreeMap[str, Dispute]
-    claimant_dispute_ids: TreeMap[Address, DynArray[str]]
-    respondent_dispute_ids: TreeMap[Address, DynArray[str]]
     dispute_count: u256
 
     def __init__(self):
-        self.disputes = TreeMap()
-        self.claimant_dispute_ids = TreeMap()
-        self.respondent_dispute_ids = TreeMap()
         self.dispute_count = u256(0)
-
-    def _append_dispute_for_party(
-        self, index: TreeMap[Address, DynArray[str]], party: Address, dispute_id: str
-    ) -> None:
-        if party not in index:
-            index[party] = DynArray[str]()
-
-        entries = index[party]
-        entries.append(dispute_id)
-        index[party] = entries
 
     def _is_claimant(self, dispute: Dispute) -> bool:
         return gl.message.sender_address == Address(dispute.party_a.address)
@@ -77,40 +62,6 @@ class VerdictAI(gl.Contract):
         if winner not in ("A", "B"):
             return "A"
         return winner
-
-    def _get_award_percentage(self, dispute: Dispute) -> int:
-        if not dispute.verdict_data:
-            return 0
-
-        verdict = json.loads(dispute.verdict_data)
-        award_pct = verdict.get("award_percentage", 80)
-        try:
-            award_pct = int(award_pct)
-        except Exception:
-            award_pct = 80
-
-        if award_pct < 0:
-            return 0
-        if award_pct > 100:
-            return 100
-        return award_pct
-
-    def _get_payouts(self, dispute: Dispute) -> tuple[u256, u256]:
-        total_escrow = int(dispute.value)
-        winner = self._get_sanitized_winner(dispute)
-        award_pct = self._get_award_percentage(dispute)
-
-        if winner == "A":
-            party_a_amount = (total_escrow * award_pct) // 100
-            party_b_amount = total_escrow - party_a_amount
-        elif winner == "B":
-            party_b_amount = (total_escrow * award_pct) // 100
-            party_a_amount = total_escrow - party_b_amount
-        else:
-            party_a_amount = total_escrow // 2
-            party_b_amount = total_escrow - party_a_amount
-
-        return u256(party_a_amount), u256(party_b_amount)
 
     def _run_ai_arbitration(self, dispute: Dispute) -> str:
         def get_winner() -> str:
@@ -134,7 +85,7 @@ class VerdictAI(gl.Contract):
             winner = "split"
         return winner
 
-    @gl.public.write.payable
+    @gl.public.write
     def submit_dispute(
         self,
         category: str,
@@ -147,20 +98,11 @@ class VerdictAI(gl.Contract):
         respondent_name: str,
         stake_amount: u256,
     ) -> None:
-        if stake_amount <= u256(0):
-            raise Exception("Stake amount must be greater than zero")
-
-        if gl.message.value != stake_amount:
-            raise Exception("Attached value must match the claimant stake")
-
-        claimant = gl.message.sender_address
-        respondent = Address(respondent_address)
-
         self.dispute_count += u256(1)
         dispute_id = "DSP-" + str(int(self.dispute_count))
 
         party_a = Party(
-            address=claimant.as_hex,
+            address=gl.message.sender_address.as_hex,
             name=claimant_name,
             claim=claim,
             evidence_hash=evidence_hash,
@@ -168,7 +110,7 @@ class VerdictAI(gl.Contract):
         )
 
         party_b = Party(
-            address=respondent.as_hex,
+            address=Address(respondent_address).as_hex,
             name=respondent_name,
             claim=NO_RESPONSE_SENTINEL,
             evidence_hash="",
@@ -191,10 +133,8 @@ class VerdictAI(gl.Contract):
         )
 
         self.disputes[dispute_id] = dispute
-        self._append_dispute_for_party(self.claimant_dispute_ids, claimant, dispute_id)
-        self._append_dispute_for_party(self.respondent_dispute_ids, respondent, dispute_id)
 
-    @gl.public.write.payable
+    @gl.public.write
     def respond_to_dispute(
         self,
         dispute_id: str,
@@ -207,18 +147,11 @@ class VerdictAI(gl.Contract):
             raise Exception("Dispute not found")
 
         dispute = self.disputes[dispute_id]
-
         if dispute.status != "responding":
             raise Exception("Not in responding phase")
 
         if not self._is_respondent(dispute):
             raise Exception("Only the designated respondent can answer this dispute")
-
-        if stake_amount <= u256(0):
-            raise Exception("Stake amount must be greater than zero")
-
-        if gl.message.value != stake_amount:
-            raise Exception("Attached value must match the respondent stake")
 
         dispute.party_b.claim = claim
         dispute.party_b.evidence_hash = evidence_hash
@@ -235,7 +168,6 @@ class VerdictAI(gl.Contract):
             raise Exception("Dispute not found")
 
         dispute = self.disputes[dispute_id]
-
         if dispute.status != "reviewing" and dispute.status != "appealed":
             raise Exception("Not ready for verdict")
 
@@ -243,10 +175,7 @@ class VerdictAI(gl.Contract):
             raise Exception("Only dispute parties can request a verdict")
 
         winner = self._run_ai_arbitration(dispute)
-
-        award_pct = 80
-        if winner == "split":
-            award_pct = 50
+        award_pct = 50 if winner == "split" else 80
 
         verdict = {
             "winner": winner,
@@ -255,7 +184,6 @@ class VerdictAI(gl.Contract):
             "award_percentage": award_pct,
             "validators": 5,
             "consensus_reached": True,
-            "escrow_locked": str(int(dispute.value)),
         }
 
         dispute.verdict_data = json.dumps(verdict)
@@ -268,10 +196,8 @@ class VerdictAI(gl.Contract):
             raise Exception("Dispute not found")
 
         dispute = self.disputes[dispute_id]
-
         if dispute.status != "verdict":
             raise Exception("No finalized verdict")
-
         if dispute.enforced:
             raise Exception("Already withdrawn")
 
@@ -283,18 +209,6 @@ class VerdictAI(gl.Contract):
         if winner == "split" and not self._is_claimant(dispute) and not self._is_respondent(dispute):
             raise Exception("Only dispute parties can enforce this verdict")
 
-        if self.balance < dispute.value:
-            raise Exception("Insufficient contract balance to settle this dispute")
-
-        party_a_amount, party_b_amount = self._get_payouts(dispute)
-        claimant = gl.ContractAt(Address(dispute.party_a.address))
-        respondent = gl.ContractAt(Address(dispute.party_b.address))
-
-        if party_a_amount > u256(0):
-            claimant.emit_transfer(value=party_a_amount)
-        if party_b_amount > u256(0):
-            respondent.emit_transfer(value=party_b_amount)
-
         dispute.enforced = True
         dispute.status = "enforced"
         self.disputes[dispute_id] = dispute
@@ -305,13 +219,10 @@ class VerdictAI(gl.Contract):
             raise Exception("Dispute not found")
 
         dispute = self.disputes[dispute_id]
-
         if dispute.status != "verdict":
             raise Exception("Can only appeal a verdict")
-
         if dispute.appeal_used:
             raise Exception("Appeal already used")
-
         if dispute.enforced:
             raise Exception("Cannot appeal after enforcement")
 
@@ -368,30 +279,6 @@ class VerdictAI(gl.Contract):
     @gl.public.view
     def get_dispute_count(self) -> u256:
         return self.dispute_count
-
-    @gl.public.view
-    def get_latest_dispute_id_by_claimant(self, claimant_address: str) -> str:
-        claimant = Address(claimant_address)
-        if claimant not in self.claimant_dispute_ids:
-            return ""
-
-        claimant_entries = self.claimant_dispute_ids[claimant]
-        if len(claimant_entries) == 0:
-            return ""
-
-        return claimant_entries[len(claimant_entries) - 1]
-
-    @gl.public.view
-    def get_latest_dispute_id_by_respondent(self, respondent_address: str) -> str:
-        respondent = Address(respondent_address)
-        if respondent not in self.respondent_dispute_ids:
-            return ""
-
-        respondent_entries = self.respondent_dispute_ids[respondent]
-        if len(respondent_entries) == 0:
-            return ""
-
-        return respondent_entries[len(respondent_entries) - 1]
 
     @gl.public.view
     def get_verdict(self, dispute_id: str) -> str:

@@ -28,6 +28,7 @@ import {
   submitDisputeAction,
 } from './services/verdictaiAdapter';
 import { resolveVerdict } from './services/verdictSource';
+import { DEFAULT_RESPONDENT_CLAIM } from './utils/respondentState';
 
 type WalletMode = 'metamask' | 'demo' | null;
 
@@ -345,14 +346,8 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const finalizeVerdictProcessing = async (disputeId: string, appeal: boolean) => {
-    const currentDispute = disputes.find((entry) => entry.id === disputeId);
-    if (!currentDispute) {
-      setProcessingDisputeIds((currentIds) => currentIds.filter((currentId) => currentId !== disputeId));
-      stopPendingAction(`${disputeId}:requestVerdict`);
-      return;
-    }
-
+  const finalizeVerdictProcessing = async (sourceDispute: Dispute, appeal: boolean) => {
+    const disputeId = sourceDispute.id;
     try {
       if (!appeal) {
         await new Promise((resolve) => window.setTimeout(resolve, 2200));
@@ -360,7 +355,7 @@ export default function App() {
         await new Promise((resolve) => window.setTimeout(resolve, 2800));
       }
 
-      const result = await resolveVerdict(currentDispute, { appeal });
+      const result = await resolveVerdict(sourceDispute, { appeal });
 
       setDisputes((currentDisputes) => currentDisputes.map((entry) => {
         if (entry.id !== disputeId) {
@@ -384,7 +379,7 @@ export default function App() {
           'requestVerdict',
           'Verdict source failed',
           getErrorMessage(error),
-          currentDispute.serviceMode ?? 'demo'
+          sourceDispute.serviceMode ?? 'demo'
         )
       );
     } finally {
@@ -423,12 +418,13 @@ export default function App() {
   };
 
   const handleCreateDispute = async (input: NewDisputeInput): Promise<Dispute> => {
-    const disputeId = input.id ?? buildNextDisputeId(disputes);
-    const pendingKey = `${disputeId}:submit`;
+    const optimisticDisputeId = input.id ?? buildNextDisputeId(disputes);
+    const pendingKey = `${optimisticDisputeId}:submit`;
     startPendingAction(pendingKey);
 
     try {
-      const receipt = await submitDisputeAction(disputeId, { ...input, id: disputeId }, walletAddress);
+      const receipt = await submitDisputeAction(optimisticDisputeId, { ...input, id: optimisticDisputeId }, walletAddress);
+      const disputeId = receipt.contractDisputeId ?? optimisticDisputeId;
       const createdAt = new Date();
       const claimantEvidence = normalizeEvidenceReference(input.evidenceHash, input.evidence);
       const expectedRespondentStake = input.stakeAmount;
@@ -450,7 +446,7 @@ export default function App() {
         partyB: {
           address: input.respondentAddress.trim(),
           name: input.respondentName.trim(),
-          claim: 'No response has been submitted yet.',
+          claim: DEFAULT_RESPONDENT_CLAIM,
           stake: 0,
         },
         status: 'responding',
@@ -509,7 +505,7 @@ export default function App() {
         entry.id === disputeId ? reviewingDispute : entry
       )));
 
-      void finalizeVerdictProcessing(disputeId, isAppealReview);
+      void finalizeVerdictProcessing(reviewingDispute, isAppealReview);
     } catch (error) {
       const message = getErrorMessage(error);
       appendTransactionToDispute(

@@ -1,5 +1,6 @@
 import { Dispute, Verdict, VerdictWinner } from '../types/dispute';
 import { calculateSettlementBreakdown } from './fees';
+import { hasRespondentSubmission } from './respondentState';
 
 function hashString(value: string): number {
   let hash = 0;
@@ -54,7 +55,7 @@ export function generateDemoVerdict(dispute: Dispute, options?: { appeal?: boole
     ].join('|')
   );
 
-  const hasResponse = dispute.partyB.claim.trim() !== 'No response has been submitted yet.';
+  const hasResponse = hasRespondentSubmission(dispute.partyB.claim);
   const bucket = seed % 100;
   let winner: VerdictWinner;
 

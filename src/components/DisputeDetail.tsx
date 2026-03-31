@@ -26,6 +26,7 @@ import { buildManualEvidence, uploadEvidenceFile } from '../services/ipfs';
 import { calculateAwardBreakdown } from '../utils/disputeLifecycle';
 import { getEvidenceUrl } from '../utils/evidence';
 import { calculateSettlementBreakdown, formatEth } from '../utils/fees';
+import { hasRespondentSubmission } from '../utils/respondentState';
 import { shortenAddress } from '../utils/wallet';
 
 interface DisputeDetailProps {
@@ -55,7 +56,7 @@ export default function DisputeDetail({
   isAppealing,
   walletAddress,
 }: DisputeDetailProps) {
-  const hasRespondentSubmission = dispute.partyB.claim.trim() !== 'No response has been submitted yet.';
+  const respondentHasSubmitted = hasRespondentSubmission(dispute.partyB.claim);
   const partyAEvidenceUrl = getEvidenceUrl(dispute.partyA.evidence ?? dispute.partyA.evidenceHash);
   const partyBEvidenceUrl = getEvidenceUrl(dispute.partyB.evidence ?? dispute.partyB.evidenceHash);
   const settlement = dispute.verdict?.settlement ?? calculateSettlementBreakdown(dispute);
@@ -77,14 +78,14 @@ export default function DisputeDetail({
     setResponseForm({
       respondentName: dispute.partyB.name,
       respondentAddress: walletAddress ?? dispute.partyB.address,
-      claim: hasRespondentSubmission ? dispute.partyB.claim : '',
+      claim: respondentHasSubmitted ? dispute.partyB.claim : '',
       evidenceHash: dispute.partyB.evidenceHash ?? '',
       stakeAmount: dispute.partyB.stake > 0 ? String(dispute.partyB.stake) : String(dispute.partyA.stake),
     });
     setUploadedEvidence(dispute.partyB.evidence ?? null);
-  }, [dispute, hasRespondentSubmission, walletAddress]);
+  }, [dispute, respondentHasSubmitted, walletAddress]);
 
-  const showRespondForm = (dispute.status === 'open' || dispute.status === 'responding') && !hasRespondentSubmission;
+  const showRespondForm = (dispute.status === 'open' || dispute.status === 'responding') && !respondentHasSubmitted;
   const responseEvidenceUrl = getEvidenceUrl(uploadedEvidence ?? responseForm.evidenceHash);
 
   const handleUploadEvidence = async (event: ChangeEvent<HTMLInputElement>) => {

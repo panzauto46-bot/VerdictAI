@@ -1,7 +1,7 @@
 import { BrowserProvider, Contract, type InterfaceAbi, keccak256, parseEther, toUtf8Bytes } from 'ethers';
 import { ActionReceipt, Dispute, DisputeResponseInput, NewDisputeInput, ServiceMode } from '../types/dispute';
 import { appConfig, hasConfiguredContract } from './appConfig';
-import { writeGenLayerContract } from './genlayerClient';
+import { readGenLayerContract, writeGenLayerContract } from './genlayerClient';
 import { getEthereumProvider } from '../utils/wallet';
 
 type ContractAction = 'submit_dispute' | 'respond_to_dispute' | 'request_ai_verdict' | 'withdraw_funds' | 'appeal_verdict';
@@ -18,12 +18,26 @@ function buildExplorerUrl(txHash: string): string | undefined {
   return `${appConfig.txExplorerBaseUrl}/${txHash}`;
 }
 
-function buildReceipt(mode: ServiceMode, txHash: string, message: string): ActionReceipt {
+const legacyMethodNameMap: Record<ContractAction, string> = {
+  submit_dispute: 'submitDispute',
+  respond_to_dispute: 'respondToDispute',
+  request_ai_verdict: 'requestAIVerdict',
+  withdraw_funds: 'withdrawFunds',
+  appeal_verdict: 'appealVerdict',
+};
+
+function buildReceipt(
+  mode: ServiceMode,
+  txHash: string,
+  message: string,
+  extras?: Partial<ActionReceipt>
+): ActionReceipt {
   return {
     mode,
     txHash,
     explorerUrl: buildExplorerUrl(txHash),
     message,
+    ...extras,
   };
 }
 
@@ -56,6 +70,44 @@ async function signActionReceipt(action: ContractAction, payload: object, wallet
     keccak256(toUtf8Bytes(signature)),
     `${action} captured as a wallet-signed receipt.`
   );
+}
+
+async function resolveCanonicalDisputeId(walletAddress: string): Promise<string | undefined> {
+  try {
+    const result = await readGenLayerContract('get_latest_dispute_id_by_claimant', [walletAddress], walletAddress);
+    if (typeof result !== 'string') {
+      throw new Error('Claimant dispute lookup returned a non-string result');
+    }
+
+    const disputeId = result.trim();
+    if (disputeId) {
+      return disputeId;
+    }
+  } catch {
+    // Fall back to the simpler Studio-safe contract shape that only exposes the dispute count.
+  }
+
+  try {
+    const count = await readGenLayerContract('get_dispute_count');
+    if (typeof count === 'bigint') {
+      return `DSP-${count.toString()}`;
+    }
+
+    if (typeof count === 'number') {
+      return `DSP-${String(count)}`;
+    }
+
+    if (typeof count === 'string') {
+      const trimmed = count.trim();
+      if (trimmed) {
+        return `DSP-${trimmed}`;
+      }
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
 }
 
 async function attemptContractWrite(
@@ -92,7 +144,7 @@ async function attemptContractWrite(
     const browserProvider = new BrowserProvider(provider);
     const signer = await browserProvider.getSigner(walletAddress);
     const contract = new Contract(appConfig.contractAddress, (appConfig.contractAbi ?? []) as InterfaceAbi, signer);
-    const method = contract[action];
+    const method = contract[action] ?? contract[legacyMethodNameMap[action]];
 
     if (typeof method !== 'function') {
       return null;
@@ -126,9 +178,12 @@ export async function submitDisputeAction(
   ];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('submit_dispute', walletAddress, args);
+    const contractReceipt = await attemptContractWrite('submit_dispute', walletAddress, args, input.stakeAmount);
     if (contractReceipt) {
-      return contractReceipt;
+      const contractDisputeId = await resolveCanonicalDisputeId(walletAddress);
+      return contractDisputeId
+        ? { ...contractReceipt, contractDisputeId }
+        : contractReceipt;
     }
 
     return signActionReceipt('submit_dispute', { disputeId, ...input }, walletAddress);
@@ -152,7 +207,7 @@ export async function respondToDisputeAction(
   ];
 
   if (walletAddress) {
-    const contractReceipt = await attemptContractWrite('respond_to_dispute', walletAddress, args);
+    const contractReceipt = await attemptContractWrite('respond_to_dispute', walletAddress, args, input.stakeAmount);
     if (contractReceipt) {
       return contractReceipt;
     }

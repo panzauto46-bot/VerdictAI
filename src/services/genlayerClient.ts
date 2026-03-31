@@ -65,3 +65,16 @@ export async function writeGenLayerContract(
 
   return txHash;
 }
+
+export async function readGenLayerContract(functionName: string, args: unknown[] = [], walletAddress?: string) {
+  if (!hasConfiguredGenLayerContract()) {
+    return null;
+  }
+
+  const client = createConfiguredGenLayerClient(walletAddress);
+  return client.readContract({
+    address: appConfig.genLayerContractAddress as Address,
+    functionName,
+    args: args as CalldataEncodable[],
+  });
+}
