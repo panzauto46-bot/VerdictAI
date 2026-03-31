@@ -1,66 +1,115 @@
 import { motion } from 'framer-motion';
-import { Scale, Zap, Shield, Globe } from 'lucide-react';
+import { Brain, CheckCircle2, Globe, Scale, Shield, User, Zap } from 'lucide-react';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
 }
 
-function HeroOrbitalVisual() {
-  const particles = [
-    { top: '14%', left: '62%', delay: 0.1, duration: 5.5 },
-    { top: '26%', left: '18%', delay: 0.8, duration: 6.2 },
-    { top: '36%', left: '76%', delay: 0.3, duration: 5.9 },
-    { top: '58%', left: '12%', delay: 1.1, duration: 6.7 },
-    { top: '68%', left: '68%', delay: 0.5, duration: 5.8 },
-    { top: '82%', left: '34%', delay: 0.9, duration: 6.4 },
-  ];
-
+function HeroVerdictFlowVisual() {
+  const validators = ['A', 'B', 'C', 'D', 'E'];
   return (
     <div className="pointer-events-none absolute right-[4%] top-1/2 hidden -translate-y-1/2 xl:block">
       <motion.div
-        initial={{ opacity: 0, x: 28, scale: 0.94 }}
+        initial={{ opacity: 0, x: 30, scale: 0.96 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.35 }}
-        className="relative h-[420px] w-[420px]"
+        transition={{ duration: 0.7, delay: 0.28 }}
+        className="relative h-[430px] w-[430px] overflow-hidden rounded-[30px] border border-black/15 bg-white/35 shadow-[0_25px_80px_rgba(0,0,0,0.08)] backdrop-blur-sm"
       >
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/12 to-white/0 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.24),transparent_55%)]" />
+        <div className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full border border-black/20 bg-white/65 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-black/65">
+          Verdict Flow
+        </div>
 
         <motion.div
-          className="absolute inset-8 rounded-full border border-white/20 [transform:rotateX(68deg)]"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute inset-12 rounded-full border border-white/16 [transform:rotateX(68deg)_rotateY(62deg)]"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute inset-16 rounded-full border border-white/14 [transform:rotateX(68deg)_rotateY(-58deg)]"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 38, repeat: Infinity, ease: 'linear' }}
-        />
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-6 top-24 w-[124px] rounded-xl border border-black/15 bg-white/80 p-3"
+        >
+          <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-black text-white">
+            <User className="h-4 w-4" />
+          </div>
+          <div className="text-xs font-semibold text-black">Party A</div>
+          <div className="text-[11px] text-black/65">Claim + Evidence</div>
+        </motion.div>
 
-        {particles.map((particle, index) => (
+        <motion.div
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 5.7, repeat: Infinity, ease: 'easeInOut', delay: 0.9 }}
+          className="absolute right-6 top-24 w-[124px] rounded-xl border border-black/15 bg-white/80 p-3"
+        >
+          <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-black text-white">
+            <User className="h-4 w-4" />
+          </div>
+          <div className="text-xs font-semibold text-black">Party B</div>
+          <div className="text-[11px] text-black/65">Counter Claim</div>
+        </motion.div>
+
+        <div className="absolute left-[125px] top-[140px] h-px w-[92px] -rotate-[18deg] bg-black/20">
           <motion.span
-            key={index}
-            className="absolute block h-2 w-2 rounded-full bg-white/70"
-            style={{ top: particle.top, left: particle.left }}
-            animate={{ y: [0, -8, 0], opacity: [0.45, 0.95, 0.45] }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: particle.delay,
-            }}
+            className="absolute -top-[3px] left-0 h-1.5 w-1.5 rounded-full bg-black/60"
+            animate={{ x: [0, 84], opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
           />
-        ))}
+        </div>
+        <div className="absolute right-[125px] top-[140px] h-px w-[92px] rotate-[18deg] bg-black/20">
+          <motion.span
+            className="absolute -top-[3px] left-0 h-1.5 w-1.5 rounded-full bg-black/60"
+            animate={{ x: [0, 84], opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'linear', delay: 0.4 }}
+          />
+        </div>
 
         <motion.div
-          className="absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-black/65 shadow-[0_0_42px_rgba(255,255,255,0.18)]"
-          animate={{ scale: [1, 1.07, 1] }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-        />
+          className="absolute left-1/2 top-[168px] flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-2xl border border-black/20 bg-black text-white"
+          animate={{ scale: [1, 1.06, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <Brain className="h-7 w-7" />
+        </motion.div>
+        <div className="absolute left-1/2 top-[236px] -translate-x-1/2 text-[11px] font-medium text-black/70">AI Validators</div>
+
+        <div className="absolute left-1/2 top-[214px] h-9 w-px -translate-x-1/2 bg-black/20">
+          <motion.span
+            className="absolute -left-[3px] top-0 h-1.5 w-1.5 rounded-full bg-black/55"
+            animate={{ y: [0, 30], opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: 0.2 }}
+          />
+        </div>
+
+        <div className="absolute left-1/2 top-[254px] flex -translate-x-1/2 items-center gap-2">
+          {validators.map((validator, index) => (
+            <motion.div
+              key={validator}
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.14 }}
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-black/20 bg-white/85 text-[10px] font-semibold text-black/80"
+            >
+              {validator}
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="absolute left-1/2 top-[286px] h-12 w-px -translate-x-1/2 bg-black/20">
+          <motion.span
+            className="absolute -left-[3px] top-0 h-1.5 w-1.5 rounded-full bg-black/55"
+            animate={{ y: [0, 42], opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: 0.5 }}
+          />
+        </div>
+
+        <motion.div
+          animate={{ y: [0, -2, 0] }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-1/2 top-[338px] flex w-[230px] -translate-x-1/2 items-center gap-3 rounded-xl border border-black/15 bg-white/90 px-4 py-3"
+        >
+          <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-black text-white">
+            <CheckCircle2 className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-black">Verdict Finalized</div>
+            <div className="text-[11px] text-black/65">On-chain enforcement</div>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -173,7 +222,7 @@ export default function Hero({ onNavigate }: HeroProps) {
         </div>
       </div>
 
-      <HeroOrbitalVisual />
+      <HeroVerdictFlowVisual />
 
       {/* Scroll Indicator */}
       <motion.div
