@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import HeroParticleField from './components/HeroParticleField';
 import HowItWorks from './components/HowItWorks';
 import Features from './components/Features';
 import LiveDemo from './components/LiveDemo';
@@ -228,12 +227,46 @@ function getErrorMessage(error: unknown): string {
   return 'Something went wrong while processing the action.';
 }
 
+function getWalletConnectErrorMessage(error: unknown): string {
+  const baseMessage = getErrorMessage(error);
+  const normalizedMessage = baseMessage.toLowerCase();
+
+  if (
+    normalizedMessage.includes('unsupported network')
+    || normalizedMessage.includes('wrong network')
+    || normalizedMessage.includes('unrecognized chain')
+  ) {
+    return `${baseMessage}\n\nSwitch your wallet network to GenLayer Studio Network, then try again.`;
+  }
+
+  if (
+    normalizedMessage.includes('insufficient funds')
+    || normalizedMessage.includes('not enough balance')
+    || normalizedMessage.includes('not enough gen')
+  ) {
+    return `${baseMessage}\n\nTop up GEN on studionet, or use Demo Wallet mode for the demo flow.`;
+  }
+
+  if (
+    normalizedMessage.includes('user rejected')
+    || normalizedMessage.includes('4001')
+    || normalizedMessage.includes('rejected the request')
+  ) {
+    return 'Wallet connection was cancelled. Please click Connect Wallet and approve the request.';
+  }
+
+  if (normalizedMessage.includes('not detected') || normalizedMessage.includes('not installed')) {
+    return `${baseMessage}\n\nInstall MetaMask (recommended) or use Demo Wallet mode.`;
+  }
+
+  return baseMessage;
+}
+
 // ─── Page Components ────────────────────────────────────────────────────────
 
 function HomePage({ onNavigate }: { onNavigate: (page: string) => void }) {
   return (
     <div className="landing-shell relative isolate overflow-hidden">
-      <HeroParticleField className="landing-particle-field fixed inset-0 z-0 h-screen w-screen" />
       <div className="relative z-10">
         <Hero onNavigate={onNavigate} />
         <HowItWorks />
@@ -531,7 +564,7 @@ export default function App() {
     } catch (error) {
       clearActiveEthereumProvider();
       if (typeof window !== 'undefined') {
-        window.alert(getErrorMessage(error));
+        window.alert(getWalletConnectErrorMessage(error));
       }
     } finally {
       setIsConnectingWallet(false);
