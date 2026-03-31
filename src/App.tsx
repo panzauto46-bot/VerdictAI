@@ -19,7 +19,14 @@ import {
   ServiceMode,
 } from './types/dispute';
 import { calculateFeeBreakdown, calculateSettlementBreakdown } from './utils/fees';
-import { buildDemoWalletAddress, getEthereumProvider } from './utils/wallet';
+import {
+  buildDemoWalletAddress,
+  clearActiveEthereumProvider,
+  getEthereumProvider,
+  getWalletModeLabel,
+  setActiveEthereumProvider,
+  type WalletProviderId,
+} from './utils/wallet';
 import { prepareGenLayerWallet } from './services/genlayerClient';
 import { fetchOnChainDisputeSnapshot, mergeOnChainDisputeSnapshot } from './services/onchainDisputeSync';
 import {
@@ -32,7 +39,7 @@ import {
 import { resolveVerdict } from './services/verdictSource';
 import { DEFAULT_RESPONDENT_CLAIM } from './utils/respondentState';
 
-type WalletMode = 'metamask' | 'demo' | null;
+type WalletMode = WalletProviderId | null;
 
 const DISPUTES_STORAGE_KEY = 'verdictai-disputes';
 
@@ -287,6 +294,7 @@ export default function App() {
   const [isConnectingWallet, setIsConnectingWallet] = useState(false);
 
   const handleDisconnectWallet = () => {
+    clearActiveEthereumProvider();
     setWalletAddress(null);
     setWalletMode(null);
     navigate('/');
@@ -407,7 +415,7 @@ export default function App() {
     }
   };
 
-  const handleConnectWallet = async () => {
+  const handleConnectWallet = async (providerId: WalletProviderId) => {
     if (walletAddress || isConnectingWallet) {
       return;
     }
@@ -415,28 +423,41 @@ export default function App() {
     setIsConnectingWallet(true);
 
     try {
-      const provider = getEthereumProvider();
-      if (provider) {
-        try {
-          await prepareGenLayerWallet();
-        } catch {
-          // Continue with account access so browser wallets that do not support the snap can still connect.
-        }
-
-        try {
-          const accounts = await provider.request({ method: 'eth_requestAccounts' }) as string[];
-          if (Array.isArray(accounts) && accounts.length > 0) {
-            setWalletAddress(accounts[0]);
-            setWalletMode('metamask');
-            return;
-          }
-        } catch {
-          // Fall back to a demo wallet if the injected provider request is rejected.
-        }
+      if (providerId === 'demo') {
+        clearActiveEthereumProvider();
+        setWalletAddress(buildDemoWalletAddress());
+        setWalletMode('demo');
+        return;
       }
 
-      setWalletAddress(buildDemoWalletAddress());
-      setWalletMode('demo');
+      setActiveEthereumProvider(providerId);
+      const provider = getEthereumProvider(providerId === 'browser' ? undefined : providerId);
+
+      if (!provider) {
+        throw new Error(`${getWalletModeLabel(providerId)} is not detected in this browser.`);
+      }
+
+      try {
+        if (providerId === 'metamask' || providerId === 'browser') {
+          await prepareGenLayerWallet();
+        }
+      } catch {
+        // Continue with account access so unsupported wallets still have a chance to connect.
+      }
+
+      const accounts = await provider.request({ method: 'eth_requestAccounts' }) as string[];
+      if (Array.isArray(accounts) && accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        setWalletMode(providerId);
+        return;
+      }
+
+      throw new Error(`${getWalletModeLabel(providerId)} did not return an account.`);
+    } catch (error) {
+      clearActiveEthereumProvider();
+      if (typeof window !== 'undefined') {
+        window.alert(getErrorMessage(error));
+      }
     } finally {
       setIsConnectingWallet(false);
     }

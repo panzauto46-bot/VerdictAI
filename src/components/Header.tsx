@@ -1,13 +1,13 @@
-import { Scale, Menu, X, LogOut } from 'lucide-react';
+import { Scale, Menu, X, LogOut, Wallet } from 'lucide-react';
 import { useState } from 'react';
-import { shortenAddress } from '../utils/wallet';
+import { getWalletModeLabel, getWalletOptions, shortenAddress, type WalletProviderId } from '../utils/wallet';
 
 interface HeaderProps {
   currentPage: string;
   onNavigate: (page: string) => void;
   walletAddress: string | null;
-  walletMode: 'metamask' | 'demo' | null;
-  onConnectWallet: () => void | Promise<void>;
+  walletMode: WalletProviderId | null;
+  onConnectWallet: (providerId: WalletProviderId) => void | Promise<void>;
   onDisconnectWallet: () => void;
   isConnectingWallet?: boolean;
 }
@@ -22,6 +22,8 @@ export default function Header({
   isConnectingWallet = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [walletPickerOpen, setWalletPickerOpen] = useState(false);
+  const walletOptions = getWalletOptions();
 
   const publicNavItems = [
     { id: 'how-it-works', label: 'How It Works', isAnchor: true },
@@ -50,6 +52,8 @@ export default function Header({
       onNavigate(item.id);
     }
   };
+
+  const connectedWalletLabel = getWalletModeLabel(walletMode);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
@@ -90,10 +94,10 @@ export default function Header({
             {walletAddress ? (
               <div className="flex items-center gap-2">
                 <div
-                  title={walletMode === 'demo' ? 'Connected via demo wallet mode.' : 'Connected through an injected wallet provider.'}
+                  title={walletMode === 'demo' ? 'Connected via demo wallet mode.' : `Connected through ${connectedWalletLabel}.`}
                   className="px-4 py-2 bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg"
                 >
-                  {walletMode === 'demo' ? 'Demo ' : ''}
+                  {walletMode ? `${connectedWalletLabel} ` : ''}
                   {shortenAddress(walletAddress)}
                 </div>
                 <button
@@ -108,7 +112,7 @@ export default function Header({
             ) : (
               <button
                 type="button"
-                onClick={onConnectWallet}
+                onClick={() => setWalletPickerOpen(true)}
                 disabled={isConnectingWallet}
                 className="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-violet-500/25"
               >
@@ -168,7 +172,7 @@ export default function Header({
                 <button
                   type="button"
                   onClick={() => {
-                    void onConnectWallet();
+                    setWalletPickerOpen(true);
                     setMobileMenuOpen(false);
                   }}
                   disabled={isConnectingWallet}
@@ -181,6 +185,62 @@ export default function Header({
           </div>
         )}
       </div>
+
+      {walletPickerOpen && !walletAddress && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Choose Wallet</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  Pick the wallet you want VerdictAI to use for this session.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setWalletPickerOpen(false)}
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {walletOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => {
+                    void onConnectWallet(option.id);
+                    setWalletPickerOpen(false);
+                  }}
+                  disabled={!option.available || isConnectingWallet}
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-left transition-all hover:border-violet-500/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-lg bg-slate-800 p-2 text-violet-300">
+                      <Wallet className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium text-white">{option.label}</div>
+                        <span className={`rounded-full px-2 py-0.5 text-xs ${option.available ? 'bg-emerald-500/15 text-emerald-200' : 'bg-slate-800 text-slate-400'}`}>
+                          {option.available ? 'Available' : 'Not detected'}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-slate-400">{option.description}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-4 text-xs text-slate-500">
+              MetaMask is recommended for GenLayer. Phantom may still reject unsupported networks.
+            </p>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
