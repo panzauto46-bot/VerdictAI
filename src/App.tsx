@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import HeroParticleField from './components/HeroParticleField';
 import HowItWorks from './components/HowItWorks';
 import Features from './components/Features';
 import LiveDemo from './components/LiveDemo';
@@ -213,12 +214,15 @@ function getErrorMessage(error: unknown): string {
 
 function HomePage({ onNavigate }: { onNavigate: (page: string) => void }) {
   return (
-    <>
-      <Hero onNavigate={onNavigate} />
-      <HowItWorks />
-      <LiveDemo />
-      <Features />
-    </>
+    <div className="landing-shell relative isolate overflow-hidden">
+      <HeroParticleField className="landing-particle-field fixed inset-0 z-0 h-screen w-screen" />
+      <div className="relative z-10">
+        <Hero onNavigate={onNavigate} />
+        <HowItWorks />
+        <LiveDemo />
+        <Features />
+      </div>
+    </div>
   );
 }
 

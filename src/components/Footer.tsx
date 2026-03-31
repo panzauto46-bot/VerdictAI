@@ -2,7 +2,7 @@ import { Scale, FileText, MessageCircle, Code } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-zinc-800 bg-black">
+    <footer className="relative z-10 border-t border-zinc-800 bg-black/72 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}

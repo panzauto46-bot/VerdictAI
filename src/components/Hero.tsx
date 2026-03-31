@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Scale, Zap, Shield, Globe } from 'lucide-react';
-import HeroParticleField from './HeroParticleField';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
@@ -8,15 +7,13 @@ interface HeroProps {
 
 export default function Hero({ onNavigate }: HeroProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+    <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
       {/* Monochrome Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-black to-black" />
-        <div className="absolute top-[-120px] left-[-80px] h-[340px] w-[340px] rounded-full bg-white/8 blur-3xl animate-pulse" />
-        <div className="absolute bottom-[-120px] right-[-90px] h-[320px] w-[320px] rounded-full bg-white/6 blur-3xl animate-pulse delay-1000" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/88 via-black/78 to-black/58" />
+        <div className="absolute top-[-120px] left-[-80px] h-[340px] w-[340px] rounded-full bg-white/10 blur-3xl animate-pulse" />
+        <div className="absolute bottom-[-120px] right-[-90px] h-[320px] w-[320px] rounded-full bg-white/8 blur-3xl animate-pulse delay-1000" />
       </div>
-
-      <HeroParticleField />
 
       {/* Grid Pattern */}
       <div

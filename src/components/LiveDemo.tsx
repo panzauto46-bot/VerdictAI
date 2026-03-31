@@ -34,7 +34,7 @@ export default function LiveDemo() {
   }, [step, isRunning, steps.length]);
 
   return (
-    <section id="demo" className="py-24 bg-black">
+    <section id="demo" className="relative z-10 py-24 bg-black/36">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

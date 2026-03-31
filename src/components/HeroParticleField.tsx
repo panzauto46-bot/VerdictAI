@@ -39,8 +39,13 @@ function buildParticles(width: number, height: number): Particle[] {
   return particles;
 }
 
-export default function HeroParticleField() {
+interface HeroParticleFieldProps {
+  className?: string;
+}
+
+export default function HeroParticleField({ className = '' }: HeroParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const layoutClass = className.trim().length > 0 ? className : 'absolute inset-0 h-full w-full';
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -240,7 +245,7 @@ export default function HeroParticleField() {
   return (
     <canvas
       ref={canvasRef}
-      className="hero-particle-field absolute inset-0 block h-full w-full pointer-events-none"
+      className={`hero-particle-field block pointer-events-none ${layoutClass}`.trim()}
       aria-hidden
     />
   );

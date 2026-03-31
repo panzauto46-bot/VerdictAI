@@ -74,7 +74,7 @@ export default function Features() {
   ];
 
   return (
-    <section id="features" className="py-24 bg-zinc-950">
+    <section id="features" className="relative z-10 py-24 bg-black/34">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Benefits */}
         <motion.div

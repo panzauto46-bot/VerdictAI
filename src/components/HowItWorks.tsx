@@ -36,7 +36,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-black">
+    <section id="how-it-works" className="relative z-10 py-24 bg-black/38">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
