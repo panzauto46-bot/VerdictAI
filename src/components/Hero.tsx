@@ -1,128 +1,8 @@
 import { motion } from 'framer-motion';
-import { Brain, CheckCircle2, Globe, Scale, Shield, User, Zap } from 'lucide-react';
+import { Globe, Scale, Shield, Zap } from 'lucide-react';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
-}
-
-function HeroVerdictFlowVisual() {
-  const validators = ['A', 'B', 'C', 'D', 'E'];
-  return (
-    <div className="pointer-events-none absolute right-[2%] top-1/2 hidden -translate-y-1/2 xl:block">
-      <motion.div
-        initial={{ opacity: 0, x: 30, scale: 0.96 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
-        transition={{ duration: 0.7, delay: 0.28 }}
-        className="relative h-[500px] w-[500px] overflow-hidden rounded-[34px] border border-black/15 bg-white/35 shadow-[0_32px_110px_rgba(0,0,0,0.12)] backdrop-blur-sm [transform:perspective(950px)_rotateY(-4deg)_rotateX(2deg)]"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_26%_18%,rgba(255,255,255,0.28),transparent_56%)]" />
-        <motion.div
-          className="absolute -left-10 -top-12 h-52 w-52 rounded-full bg-white/25 blur-3xl"
-          animate={{ opacity: [0.4, 0.75, 0.4], scale: [1, 1.1, 1] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <div className="absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-black/20 bg-white/65 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-black/65">
-          Verdict Flow
-        </div>
-
-        <motion.div
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-7 top-28 w-[146px] rounded-2xl border border-black/15 bg-white/82 p-4"
-        >
-          <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-black text-white">
-            <User className="h-4.5 w-4.5" />
-          </div>
-          <div className="text-sm font-semibold text-black">Party A</div>
-          <div className="text-xs text-black/65">Claim + Evidence</div>
-        </motion.div>
-
-        <motion.div
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 5.7, repeat: Infinity, ease: 'easeInOut', delay: 0.9 }}
-          className="absolute right-7 top-28 w-[146px] rounded-2xl border border-black/15 bg-white/82 p-4"
-        >
-          <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-black text-white">
-            <User className="h-4.5 w-4.5" />
-          </div>
-          <div className="text-sm font-semibold text-black">Party B</div>
-          <div className="text-xs text-black/65">Counter Claim</div>
-        </motion.div>
-
-        <div className="absolute left-[148px] top-[166px] h-px w-[106px] -rotate-[18deg] bg-black/20">
-          <motion.span
-            className="absolute -top-[3px] left-0 h-1.5 w-1.5 rounded-full bg-black/60"
-            animate={{ x: [0, 98], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-        <div className="absolute right-[148px] top-[166px] h-px w-[106px] rotate-[18deg] bg-black/20">
-          <motion.span
-            className="absolute -top-[3px] left-0 h-1.5 w-1.5 rounded-full bg-black/60"
-            animate={{ x: [0, 98], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: 'linear', delay: 0.4 }}
-          />
-        </div>
-
-        <motion.div
-          className="absolute left-1/2 top-[206px] flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-3xl border border-black/20 bg-black text-white shadow-[0_10px_28px_rgba(0,0,0,0.22)]"
-          animate={{ scale: [1, 1.06, 1] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <Brain className="h-8 w-8" />
-        </motion.div>
-        <motion.div
-          className="absolute left-1/2 top-[194px] h-[44px] w-[44px] -translate-x-1/2 rounded-full border border-black/20"
-          animate={{ scale: [1, 1.16, 1], opacity: [0.34, 0.12, 0.34] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <div className="absolute left-1/2 top-[282px] -translate-x-1/2 text-xs font-medium text-black/70">AI Validators</div>
-
-        <div className="absolute left-1/2 top-[246px] h-11 w-px -translate-x-1/2 bg-black/20">
-          <motion.span
-            className="absolute -left-[3px] top-0 h-1.5 w-1.5 rounded-full bg-black/55"
-            animate={{ y: [0, 40], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: 0.2 }}
-          />
-        </div>
-
-        <div className="absolute left-1/2 top-[312px] flex -translate-x-1/2 items-center gap-2.5">
-          {validators.map((validator, index) => (
-            <motion.div
-              key={validator}
-              animate={{ y: [0, -3, 0] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.14 }}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-black/20 bg-white/90 text-[11px] font-semibold text-black/80"
-            >
-              {validator}
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="absolute left-1/2 top-[338px] h-[54px] w-px -translate-x-1/2 bg-black/20">
-          <motion.span
-            className="absolute -left-[3px] top-0 h-1.5 w-1.5 rounded-full bg-black/55"
-            animate={{ y: [0, 48], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: 0.5 }}
-          />
-        </div>
-
-        <motion.div
-          animate={{ y: [0, -2, 0] }}
-          transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-1/2 top-[404px] flex w-[286px] -translate-x-1/2 items-center gap-3 rounded-2xl border border-black/15 bg-white/92 px-5 py-3.5"
-        >
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
-            <CheckCircle2 className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-black">Verdict Finalized</div>
-            <div className="text-xs text-black/65">On-chain enforcement</div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </div>
-  );
 }
 
 export default function Hero({ onNavigate }: HeroProps) {
@@ -143,8 +23,8 @@ export default function Hero({ onNavigate }: HeroProps) {
         }}
       />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8 xl:pr-[560px]">
-        <div className="text-center">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
+        <div className="mx-auto w-full max-w-5xl text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -231,8 +111,6 @@ export default function Hero({ onNavigate }: HeroProps) {
           </motion.div>
         </div>
       </div>
-
-      <HeroVerdictFlowVisual />
 
       {/* Scroll Indicator */}
       <motion.div
