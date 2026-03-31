@@ -16,6 +16,19 @@ body {
   color: #f5f5f5;
 }
 
+.app-shell {
+  min-height: 100vh;
+  transition: filter 220ms ease;
+}
+
+.app-shell.theme-light {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.app-shell.theme-dark {
+  filter: none;
+}
+
 h1,
 h2,
 h3,

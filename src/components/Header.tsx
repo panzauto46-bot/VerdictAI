@@ -1,4 +1,4 @@
-import { Scale, Menu, X, LogOut, Wallet, ChevronDown } from 'lucide-react';
+import { Scale, Menu, X, LogOut, Wallet, ChevronDown, Moon, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { getWalletModeLabel, getWalletOptions, shortenAddress, type WalletProviderId } from '../utils/wallet';
 
@@ -7,6 +7,8 @@ interface HeaderProps {
   onNavigate: (page: string) => void;
   walletAddress: string | null;
   walletMode: WalletProviderId | null;
+  themeMode: 'light' | 'dark';
+  onToggleTheme: () => void;
   onConnectWallet: (providerId: WalletProviderId) => void | Promise<void>;
   onDisconnectWallet: () => void;
   isConnectingWallet?: boolean;
@@ -17,6 +19,8 @@ export default function Header({
   onNavigate,
   walletAddress,
   walletMode,
+  themeMode,
+  onToggleTheme,
   onConnectWallet,
   onDisconnectWallet,
   isConnectingWallet = false,
@@ -91,6 +95,16 @@ export default function Header({
 
           {/* Connect Wallet Button */}
           <div className="hidden md:flex items-center gap-4 relative">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800"
+              title={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {themeMode === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              {themeMode === 'light' ? 'Dark' : 'Light'}
+            </button>
+
             {walletAddress ? (
               <div className="flex items-center gap-2">
                 <div
@@ -200,6 +214,14 @@ export default function Header({
               ))}
               {walletAddress ? (
                 <div className="flex items-center gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={onToggleTheme}
+                    className="p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg transition-colors"
+                    title={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                  >
+                    {themeMode === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                  </button>
                   <div className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 text-white text-sm font-medium rounded-lg">
                     {walletMode === 'demo' ? 'Demo ' : ''}
                     {shortenAddress(walletAddress)}
@@ -218,6 +240,16 @@ export default function Header({
                 </div>
               ) : (
                 <div className="mt-2 space-y-2">
+                  <button
+                    type="button"
+                    onClick={onToggleTheme}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-zinc-900 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg hover:bg-zinc-800 transition-colors"
+                    title={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                  >
+                    {themeMode === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                    {themeMode === 'light' ? 'Dark Mode' : 'Light Mode'}
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setWalletPickerOpen((currentState) => !currentState)}

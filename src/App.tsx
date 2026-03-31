@@ -40,8 +40,10 @@ import { resolveVerdict } from './services/verdictSource';
 import { DEFAULT_RESPONDENT_CLAIM } from './utils/respondentState';
 
 type WalletMode = WalletProviderId | null;
+type ThemeMode = 'light' | 'dark';
 
 const DISPUTES_STORAGE_KEY = 'verdictai-disputes';
+const THEME_STORAGE_KEY = 'verdictai-theme-mode';
 
 function normalizeEvidenceReference(
   evidenceHash?: string,
@@ -289,6 +291,14 @@ export default function App() {
   const [disputes, setDisputes] = useState<Dispute[]>(() => loadDisputes());
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletMode, setWalletMode] = useState<WalletMode>(null);
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') {
+      return 'light';
+    }
+
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return storedTheme === 'dark' ? 'dark' : 'light';
+  });
   const [processingDisputeIds, setProcessingDisputeIds] = useState<string[]>([]);
   const [pendingActionKeys, setPendingActionKeys] = useState<string[]>([]);
   const [isConnectingWallet, setIsConnectingWallet] = useState(false);
@@ -308,6 +318,14 @@ export default function App() {
 
     window.localStorage.setItem(DISPUTES_STORAGE_KEY, JSON.stringify(disputes));
   }, [disputes]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, themeMode);
+  }, [themeMode]);
 
   // Auto-redirect to dashboard when wallet is connected from the home page
   useEffect(() => {
@@ -354,6 +372,10 @@ export default function App() {
   const handleViewDispute = (id: string) => {
     navigate(`/dispute/${id}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleToggleTheme = () => {
+    setThemeMode((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'));
   };
 
   const syncDisputeFromChain = async (dispute: Dispute): Promise<Dispute> => {
@@ -706,12 +728,14 @@ export default function App() {
   else if (currentPath.startsWith('/dispute')) currentPage = 'dispute';
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className={`app-shell min-h-screen ${themeMode === 'light' ? 'theme-light' : 'theme-dark'}`}>
       <Header
         currentPage={currentPage}
         onNavigate={handleNavigate}
         walletAddress={walletAddress}
         walletMode={walletMode}
+        themeMode={themeMode}
+        onToggleTheme={handleToggleTheme}
         onConnectWallet={handleConnectWallet}
         onDisconnectWallet={handleDisconnectWallet}
         isConnectingWallet={isConnectingWallet}
